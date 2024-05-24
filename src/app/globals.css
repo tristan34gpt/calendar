@@ -2,32 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.form-login {
+  margin-top: 50px;
+  background: #ffffff;
+  box-shadow: 0px 4px 15px 13px rgba(233, 87, 147, 0.35);
+  width: 70%;
+  display: flex;
+  justify-content: space-around;
+  border-radius: 15px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.input-form {
+  border: 2px solid transparent; /* Définir la largeur de la bordure et la rendre transparente pour utiliser border-image */
+  border-image: linear-gradient(180deg, #fb8b24 0%, #e95793 100%) 1; /* Dégradé linéaire pour la bordure */
+  border-radius: 15px;
+  outline: none;
 }
