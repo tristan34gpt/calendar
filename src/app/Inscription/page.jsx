@@ -1,9 +1,23 @@
+"use client";
+
+import { createUser } from "@/actions/create-user";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Logo from "@/components/Logo";
 import Link from "next/link";
-
 export default function Signin() {
+  //Function
+
+  const prepareCreateUser = async (formData) => {
+    const firstname = formData.get("firstname");
+    const lastname = formData.get("lastname");
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    console.log(firstname, lastname, email, password);
+
+    await createUser(firstname, lastname, email, password);
+  };
   return (
     <div className="flex flex-col justify-center items-center">
       <h1 className="text-center font-bold text-[2em] mt-[50px]">
@@ -11,43 +25,50 @@ export default function Signin() {
       </h1>
       <div className="form-login mb-[50px]">
         {/* Form */}
-        <div className="flex flex-col w-full  items-center">
+        <div className="flex flex-col w-full items-center">
           {/* Logo */}
-          <Logo className={"mt-[50px]"} />
-
-          <Input
-            type={"text"}
-            placeholder={"Prénom"}
-            classname={"mt-[30px] w-[70%] h-[40px] "}
-          />
-          <Input
-            type={"text"}
-            placeholder={"Nom"}
-            classname={"mt-[30px] w-[70%] h-[40px]"}
-          />
-          <Input
-            type={"email"}
-            placeholder={"Adresse email"}
-            classname={"mt-[30px] w-[70%] h-[40px]"}
-          />
-          <Input
-            type={"password"}
-            placeholder={"Mot de passe"}
-            classname={"mt-[30px] w-[70%] h-[40px]"}
-          />
-
-          <Input
-            type={"password"}
-            placeholder={"Confirmation du mot de passe"}
-            classname={"mt-[30px] w-[70%] h-[40px]"}
-          />
-          <Button
-            className={
-              "w-[50%] h-[40px] font-semibold rounded-md text-white text-[1.2em] mt-[30px]"
-            }
+          <Logo className={"mt-[50px]"} />{" "}
+          <form
+            className="flex flex-col w-full items-center"
+            action={prepareCreateUser}
           >
-            Inscription
-          </Button>
+            <Input
+              type={"text"}
+              placeholder={"Prénom"}
+              classname={"mt-[30px] w-[70%] h-[40px] "}
+              name={"firstname"}
+            />
+            <Input
+              type={"text"}
+              placeholder={"Nom"}
+              classname={"mt-[30px] w-[70%] h-[40px]"}
+              name={"lastname"}
+            />
+            <Input
+              type={"email"}
+              placeholder={"Adresse email"}
+              classname={"mt-[30px] w-[70%] h-[40px]"}
+              name={"email"}
+            />
+            <Input
+              type={"password"}
+              placeholder={"Mot de passe"}
+              classname={"mt-[30px] w-[70%] h-[40px]"}
+              name={"password"}
+            />
+            <Input
+              type={"password"}
+              placeholder={"Confirmation du mot de passe"}
+              classname={"mt-[30px] w-[70%] h-[40px]"}
+            />
+            <Button
+              className={
+                "w-[50%] h-[40px] font-semibold rounded-md text-white text-[1.2em] mt-[30px]"
+              }
+            >
+              Inscription
+            </Button>
+          </form>
           <p className="mt-[30px]  rounded-md">Avez-vous déjà un compte ?</p>
           <p className="mb-[15px]">
             Connectez-vous
@@ -58,7 +79,7 @@ export default function Signin() {
         </div>
 
         {/*  */}
-        <div className="flex flex-col bg-gradiant-color w-full h-[500px] rounded-[5px]">
+        <div className="flex flex-col bg-gradiant-color w-full h-[full] rounded-[5px]">
           <p className="text-center font-semibold text-white mt-[10%] text-[1.3em]">
             <span className="text-black">Créer</span> votre système de
             réservation et partagez-le

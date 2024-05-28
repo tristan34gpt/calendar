@@ -1,9 +1,21 @@
+"use client";
+
+import { connectUser } from "@/actions/signin-user";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Logo from "@/components/Logo";
 import Link from "next/link";
 
 export default function Login() {
+  //Function
+  const signinUser = async (formData) => {
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    console.log(email, password);
+
+    await connectUser(email, password);
+  };
   return (
     <div className="flex flex-col justify-center items-center">
       <h1 className="text-center font-bold text-[2em] mt-[50px]">
@@ -14,30 +26,36 @@ export default function Login() {
         <div className="flex flex-col w-full  items-center">
           {/* Logo */}
           <Logo className={"mt-[50px]"} />
-
-          <Input
-            type={"email"}
-            placeholder={"adresse email"}
-            classname={"mt-[50px] w-[70%] h-[40px] "}
-          />
-          <Input
-            type={"password"}
-            placeholder={"Mot de passe"}
-            classname={"mt-[50px] w-[70%] h-[40px]"}
-          />
-          <Button
-            className={
-              "w-[50%] h-[40px] font-semibold rounded-md text-white text-[1.2em] mt-[50px]"
-            }
+          <form
+            className="flex flex-col w-full items-center"
+            action={signinUser}
           >
-            Connexion
-          </Button>
+            <Input
+              type={"email"}
+              placeholder={"adresse email"}
+              classname={"mt-[50px] w-[70%] h-[40px] "}
+              name={"email"}
+            />
+            <Input
+              type={"password"}
+              placeholder={"Mot de passe"}
+              classname={"mt-[50px] w-[70%] h-[40px]"}
+              name={"password"}
+            />
+            <Button
+              className={
+                "w-[50%] h-[40px] font-semibold rounded-md text-white text-[1.2em] mt-[50px]"
+              }
+            >
+              Connexion
+            </Button>
+          </form>
           <p className="mt-[50px] rounded-md">
             Vous n'avez pas encore de compte ?
           </p>
           <p>
             Inscrivez-vous{" "}
-            <Link href={"/Inscription"}>
+            <Link href={"/inscription"}>
               <span className="font-bold cursor-pointer">ici.</span>
             </Link>
           </p>
