@@ -1,20 +1,57 @@
 "use client";
 
-import { connectUser } from "@/actions/signin-user";
+// Components
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Logo from "@/components/Logo";
+
+// library
+import { checkEmail } from "@/utils/check-emailsyntax";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 
 export default function Login() {
+  //variable
+  const router = useRouter();
+
   //Function
   const signinUser = async (formData) => {
     const email = formData.get("email");
     const password = formData.get("password");
 
-    console.log(email, password);
+    //If a field is empty
+    if (!email || !password) {
+      toast.error("Veuillez remplir tous les champs");
+    }
 
-    await connectUser(email, password);
+    //check if the email is valid
+    if (!checkEmail(email)) {
+      toast.error("Veuillez entrer un email valide");
+    }
+
+    //Signin the use
+    try {
+      const response = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (response.error) {
+        return toast.error(response.error);
+      }
+    } catch (e) {
+      return toast.error(e.message);
+    }
+
+    //succes
+
+    toast.success("Vous êtes connecté");
+    router.replace("/");
+
+    //Redirect
   };
   return (
     <div className="flex flex-col justify-center items-center">

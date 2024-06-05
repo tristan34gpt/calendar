@@ -1,5 +1,13 @@
-export default function Button({ children, className }) {
+import { useFormStatus } from "react-dom";
+
+export default function Button({ children, className, formButton }) {
+  const { pending } = useFormStatus();
   return (
-    <button className={`bg-gradiant-color ${className}`}>{children}</button>
+    <button
+      disabled={formButton && pending}
+      className={`bg-gradiant-color disabled:bg-opacity-50 disabled:cursor-not-allowed ${className}`}
+    >
+      {children}
+    </button>
   );
 }

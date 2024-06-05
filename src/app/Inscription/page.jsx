@@ -1,22 +1,55 @@
 "use client";
-
-import { createUser } from "@/actions/create-user";
+// Components
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Logo from "@/components/Logo";
-import Link from "next/link";
-export default function Signin() {
-  //Function
 
+// Library
+import { createUser } from "@/actions/create-user";
+import { checkEmail } from "@/utils/check-emailsyntax";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import Link from "next/link";
+
+export default function Signin() {
+  //Variable
+  const router = useRouter();
+
+  //Function
   const prepareCreateUser = async (formData) => {
     const firstname = formData.get("firstname");
     const lastname = formData.get("lastname");
     const email = formData.get("email");
     const password = formData.get("password");
+    const passwordTwoo = formData.get("passwordtwoo");
 
-    console.log(firstname, lastname, email, password);
+    // If a field is empty
+    if (!firstname || !lastname || !email || !password) {
+      //Notification
+      return toast.error("Aucun champ ne doit être vide !");
+    }
 
-    await createUser(firstname, lastname, email, password);
+    // If identical passwords
+
+    if (password !== passwordTwoo) {
+      return toast.error("Vos mot de passes ne sont pas identiques");
+    }
+    if (!checkEmail(email)) {
+      //Check if the email is valide
+      return toast.error("veuillez entrez un email valide");
+    }
+
+    try {
+      await createUser(firstname, lastname, email, password);
+      //Success
+
+      toast.success("Votre compte a bien été crée !");
+
+      //redirect
+      router.push("/connexion");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
   return (
     <div className="flex flex-col justify-center items-center">
@@ -60,8 +93,10 @@ export default function Signin() {
               type={"password"}
               placeholder={"Confirmation du mot de passe"}
               classname={"mt-[30px] w-[70%] h-[40px]"}
+              name={"passwordtwoo"}
             />
             <Button
+              formButton
               className={
                 "w-[50%] h-[40px] font-semibold rounded-md text-white text-[1.2em] mt-[30px]"
               }
