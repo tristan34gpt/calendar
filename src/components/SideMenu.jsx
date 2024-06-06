@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Button from "./Button";
 
@@ -7,18 +9,21 @@ export function SideMenu() {
       <h1 className=" mb-[80px] font-semibold text-[1.5em] text-center">
         Bienvenue <br /> Thomas
       </h1>
-      <Button
-        className={"rounded-md w-[250px] h-[40px] "}
-        children={"+ Créez"}
-      ></Button>
+      <Link href={"/create/date"}>
+        <Button
+          className={"rounded-md w-[250px] h-[40px] "}
+          children={"+ Créez"}
+        ></Button>
+      </Link>
       <div className="mt-[80px] mb-[80px] flex flex-col text-[1.3em] font-medium">
         <Link className="m-2" href={"/"}>
+          Acceuil
+        </Link>
+        <Link className="m-2" href={"/agenda"}>
           Mon agenda
         </Link>
-        <Link className="m-2" href={"/"}>
-          Gestions
-        </Link>
-        <Link className="m-2" href={"/"}>
+
+        <Link className="m-2" href={"/profil"}>
           Profil
         </Link>
       </div>
