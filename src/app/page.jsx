@@ -13,12 +13,7 @@ export default function Home() {
   console.log(session);
 
   return (
-    <div className="flex">
-      {/* Side menu */}
-      <div className="">
-        <SideMenu />
-      </div>
-
+    <div>
       {/* Display Home */}
       <div className="w-[100%] mt-[40px]">
         <h1 className=" text-center text-[1.5em] font-semibold">
