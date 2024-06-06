@@ -5,7 +5,7 @@ export default function Button({ children, className, formButton }) {
   return (
     <button
       disabled={formButton && pending}
-      className={`bg-gradiant-color disabled:bg-opacity-50 disabled:cursor-not-allowed ${className}`}
+      className={`bg-gradiant-color disabled:bg-opacity-50 disabled:cursor-not-allowed font-semibold text-white ${className}`}
     >
       {children}
     </button>

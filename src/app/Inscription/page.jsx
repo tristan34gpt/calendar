@@ -42,9 +42,7 @@ export default function Signin() {
     try {
       await createUser(firstname, lastname, email, password);
       //Success
-
       toast.success("Votre compte a bien été crée !");
-
       //redirect
       router.push("/connexion");
     } catch (error) {

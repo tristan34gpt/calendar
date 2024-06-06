@@ -18,3 +18,10 @@
   border-radius: 15px;
   outline: none;
 }
+
+.border-gradiant {
+  border-width: 2px;
+  border-style: solid;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(180deg, #fb8b24 0%, #e95793 100%);
+}

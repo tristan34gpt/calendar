@@ -5,7 +5,7 @@ module.exports = (env) => {
     return {
       env: {
         MONGODB_CLIENT:
-          "mongodb+srv://tristanvera19:<password>@cluster0.cs9vw2p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+          "mongodb+srv://tristanvera19:emiliano789@cluster0.cs9vw2p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
 
         MONGODB_DATABASE: "calendar",
         NEXTAUTH_SECRET:
@@ -16,7 +16,7 @@ module.exports = (env) => {
     return {
       env: {
         MONGODB_CLIENT:
-          "mongodb+srv://tristanvera19:<password>@cluster0.cs9vw2p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+          "mongodb+srv://tristanvera19:emiliano789@cluster0.cs9vw2p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
 
         MONGODB_DATABASE: "calendar",
         NEXTAUTH_SECRET:
