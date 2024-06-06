@@ -2,6 +2,7 @@ import { ToastContainer } from "react-toastify";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./Providers";
+import { SideMenu } from "@/components/SideMenu";
 
 export const metadata = {
   title: "Create Next App",
@@ -13,7 +14,10 @@ export default function RootLayout({ children }) {
     <html lang="fr">
       <body>
         <AuthProvider>
-          {children}
+          <div className="flex">
+            <SideMenu />
+            {children}
+          </div>
           <ToastContainer position="bottom-right" />
         </AuthProvider>
       </body>
