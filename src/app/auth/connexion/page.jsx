@@ -49,7 +49,7 @@ export default function Login() {
     //succes
 
     toast.success("Vous êtes connecté");
-    router.replace("/");
+    router.replace("/authentifier");
 
     //Redirect
   };

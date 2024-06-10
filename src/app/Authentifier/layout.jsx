@@ -1,4 +1,4 @@
-import { SideMenu } from "./SideMenu";
+import { SideMenu } from "@/components/SideMenu";
 
 export default function layout({ children }) {
   return (

@@ -16,14 +16,14 @@ export function SideMenu() {
         ></Button>
       </Link>
       <div className="mt-[80px] mb-[80px] flex flex-col text-[1.3em] font-medium">
-        <Link className="m-2" href={"/"}>
+        <Link className="m-2" href={"/authentifier"}>
           Acceuil
         </Link>
-        <Link className="m-2" href={"/agenda"}>
+        <Link className="m-2" href={"/authentifier/agenda"}>
           Mon agenda
         </Link>
 
-        <Link className="m-2" href={"/profil"}>
+        <Link className="m-2" href={"/authentifier/profil"}>
           Profil
         </Link>
       </div>

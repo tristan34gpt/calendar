@@ -44,7 +44,7 @@ export default function Signin() {
       //Success
       toast.success("Votre compte a bien été crée !");
       //redirect
-      router.push("/connexion");
+      router.push("/auth/connexion");
     } catch (error) {
       toast.error(error.message);
     }
