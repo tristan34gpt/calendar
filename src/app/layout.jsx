@@ -14,10 +14,7 @@ export default function RootLayout({ children }) {
     <html lang="fr">
       <body>
         <AuthProvider>
-          <div className="flex">
-            <SideMenu />
-            {children}
-          </div>
+          <div>{children}</div>
           <ToastContainer position="bottom-right" />
         </AuthProvider>
       </body>
