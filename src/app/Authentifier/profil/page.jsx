@@ -1,11 +1,15 @@
 "use client";
 
 import Button from "@/components/Button";
+import { useSession } from "next-auth/react";
 import { useRef, useState } from "react";
 
 export default function Profil() {
+  const { data: session } = useSession();
   //state
   const [modalEditProfil, setModalEditProfil] = useState(false);
+
+  console.log(session);
 
   //ref
   const firstname = useRef(null);
@@ -16,9 +20,9 @@ export default function Profil() {
     <div className="  mt-[100px] flex flex-col  justify-center text-center w-full h-full relative">
       <h1 className="text-[1.3em] font-semibold">Profil</h1>
       <div className="text-[1.1em] mt-[30px]">
-        <h3>Nom : Martinez</h3>
-        <h3 className="mt-2">Prénom : Thomas</h3>
-        <h3 className="mt-2">Email : Thomas@gmail.com </h3>
+        <h3>Nom : {session.user.firstname}</h3>
+        <h3 className="mt-2">Prénom : {session.user.lastname}</h3>
+        <h3 className="mt-2">Email : {session.user.email} </h3>
       </div>
       <div className="">
         <Button
