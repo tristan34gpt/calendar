@@ -2,10 +2,40 @@
 
 import Button from "@/components/Button";
 import { useSession } from "next-auth/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Profil() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      const fetchReservations = async () => {
+        try {
+          const response = await fetch("/api/reservations");
+          const data = await response.json();
+          setReservation(data);
+        } catch (error) {
+          console.error("Error fetching reservations:", error);
+        } finally {
+          setLoadingReservations(false);
+        }
+      };
+
+      fetchReservations();
+    }
+  }, [status]);
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (status === "unauthenticated") {
+    return <div>User is not authenticated</div>;
+  }
+
+  if (!session) {
+    return <div>Loading...</div>;
+  }
   //state
   const [modalEditProfil, setModalEditProfil] = useState(false);
 
@@ -20,9 +50,16 @@ export default function Profil() {
     <div className="  mt-[100px] flex flex-col  justify-center text-center w-full h-full relative">
       <h1 className="text-[1.3em] font-semibold">Profil</h1>
       <div className="text-[1.1em] mt-[30px]">
-        <h3>Nom : {session.user.firstname}</h3>
-        <h3 className="mt-2">Prénom : {session.user.lastname}</h3>
-        <h3 className="mt-2">Email : {session.user.email} </h3>
+        <h3>
+          <span className="font-semibold">Nom :</span> {session.user.lastname}
+        </h3>
+        <h3 className="mt-2">
+          <span className="font-semibold">Prénom :</span>{" "}
+          {session.user.firstname}
+        </h3>
+        <h3 className="mt-2">
+          <span className="font-semibold">Email :</span> {session.user.email}{" "}
+        </h3>
       </div>
       <div className="">
         <Button
