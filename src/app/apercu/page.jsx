@@ -1,4 +1,5 @@
 "use client";
+
 import Logo from "@/components/Logo";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -7,7 +8,29 @@ export default function Apercu() {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1em"
+          height="1em"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+          >
+            <animateTransform
+              attributeName="transform"
+              dur="0.75s"
+              repeatCount="indefinite"
+              type="rotate"
+              values="0 12 12;360 12 12"
+            ></animateTransform>
+          </path>
+        </svg>
+      </div>
+    );
   }
 
   if (status === "unauthenticated") {
@@ -15,7 +38,29 @@ export default function Apercu() {
   }
 
   if (!session) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1em"
+          height="1em"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+          >
+            <animateTransform
+              attributeName="transform"
+              dur="0.75s"
+              repeatCount="indefinite"
+              type="rotate"
+              values="0 12 12;360 12 12"
+            ></animateTransform>
+          </path>
+        </svg>
+      </div>
+    );
   }
 
   const week = [
@@ -34,7 +79,7 @@ export default function Apercu() {
   const yearOptions = { year: "numeric" };
   const currentYear = date.toLocaleString("fr-FR", yearOptions);
 
-  console.log(session);
+  console.log(session.user.reservations);
 
   return (
     <>
@@ -74,23 +119,30 @@ export default function Apercu() {
             </h3>
 
             <div className="flex justify-between mt-5 p-5">
-              {week.map((day, index) => (
-                <div className="text-[1.1em]" key={index}>
-                  {day}
-                  {[
-                    "8h00",
-                    "10h00",
-                    "11h00",
-                    "14h00",
-                    "16h00",
-                    "18h00",
-                    "19h00",
-                  ].map((hour, hourIndex) => (
-                    <div
-                      className="bg-gradiant-color text-white m-2 w-[90px] p-2 rounded-md cursor-pointer"
-                      key={hourIndex}
-                    >
-                      {hour}
+              {session.user.reservations.map((reservation, index) => (
+                <div
+                  key={reservation._id}
+                  className="m-2 flex justify-between w-full"
+                >
+                  {reservation.days.map((day, dayIndex) => (
+                    <div className="text-[1.1em]" key={dayIndex}>
+                      {day}
+                      {[
+                        "8h00",
+                        "10h00",
+                        "11h00",
+                        "14h00",
+                        "16h00",
+                        "18h00",
+                        "19h00",
+                      ].map((hour, hourIndex) => (
+                        <div
+                          className="bg-gradiant-color text-white m-2 w-[90px] p-2 rounded-md cursor-pointer"
+                          key={hourIndex}
+                        >
+                          {hour}
+                        </div>
+                      ))}
                     </div>
                   ))}
                 </div>

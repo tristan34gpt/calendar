@@ -10,8 +10,6 @@ export default function Home() {
 
   const [detailsReservation, SetDetailsReservation] = useState(false);
 
-  console.log(session);
-
   return (
     <div>
       {/* Display Home */}

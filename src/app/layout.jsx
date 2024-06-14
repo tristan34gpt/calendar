@@ -2,7 +2,6 @@ import { ToastContainer } from "react-toastify";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./Providers";
-import { SideMenu } from "@/components/SideMenu";
 
 export const metadata = {
   title: "Create Next App",

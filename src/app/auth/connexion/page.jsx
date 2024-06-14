@@ -17,18 +17,20 @@ export default function Login() {
   const router = useRouter();
 
   //Function
-  const signinUser = async (formData) => {
+  const signinUser = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
     const email = formData.get("email");
     const password = formData.get("password");
 
     //If a field is empty
     if (!email || !password) {
-      toast.error("Veuillez remplir tous les champs");
+      return toast.error("Veuillez remplir tous les champs");
     }
 
     //check if the email is valid
     if (!checkEmail(email)) {
-      toast.error("Veuillez entrer un email valide");
+      return toast.error("Veuillez entrer un email valide");
     }
 
     //Signin the use
@@ -65,7 +67,7 @@ export default function Login() {
           <Logo className={"mt-[50px]"} />
           <form
             className="flex flex-col w-full items-center"
-            action={signinUser}
+            onSubmit={signinUser}
           >
             <Input
               type={"email"}
@@ -80,6 +82,7 @@ export default function Login() {
               name={"password"}
             />
             <Button
+              type="submit"
               className={
                 "w-[50%] h-[40px] font-semibold rounded-md text-white text-[1.2em] mt-[50px]"
               }

@@ -2,20 +2,29 @@
 
 import { createCalendar, infoDaysCalendar } from "@/actions/create-calendar";
 import Button from "@/components/Button";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Date() {
-  //Variable
-
+  // Variable
+  const { data: session } = useSession();
   const [dates, setDates] = useState([]);
-
   const router = useRouter();
 
-  //Functions
+  const week = [
+    "Lundi",
+    "Mardi",
+    "Mercredi",
+    "Jeudi",
+    "Vendredi",
+    "Samedi",
+    "Dimanche",
+  ];
 
   // Functions
+
   const toggleDate = (day) => {
     if (dates.includes(day)) {
       setDates(dates.filter((d) => d !== day));
@@ -24,8 +33,9 @@ export default function Date() {
     }
   };
 
-  const createDate = async () => {
-    if (dates.length == 0) {
+  const createDate = async (event) => {
+    event.preventDefault();
+    if (dates.length === 0) {
       return toast.error("Vous devez choisir au moins 1 jour");
     }
     try {
@@ -36,22 +46,19 @@ export default function Date() {
       toast.error(e.message);
     }
   };
+
+  if (!session) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <h1 className="text-[1.5em] font-semibold mb-[50px]">
         Vos Disponibilités
       </h1>
-      <form action={createDate}>
+      <form onSubmit={createDate}>
         <div className="flex flex-col justify-center items-center text-[1.3em]">
-          {[
-            "Lundi",
-            "Mardi",
-            "Mercredi",
-            "Jeudi",
-            "Vendredi",
-            "Samedi",
-            "Dimanche",
-          ].map((day, index) => (
+          {getDays(session.user.reservations).map((day, index) => (
             <div key={index} className="flex mt-5">
               <div className="bg-gradiant-color w-[400px] h-[40px] text-center rounded-md flex justify-center items-center text-white">
                 {day}
@@ -72,7 +79,7 @@ export default function Date() {
         </div>
         <Button
           type="submit"
-          className="mt-[40px] w-[500px] h-[40px] rounded-md  text-white flex justify-center items-center"
+          className="mt-[40px] w-[500px] h-[40px] rounded-md text-white flex justify-center items-center"
         >
           Valider
         </Button>
