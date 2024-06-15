@@ -8,16 +8,11 @@ export async function POST(request) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  // Log the token to check its content
-  console.log("Token:", token);
-
   if (!token) {
     return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
   }
 
   const { firstName, lastName, email } = await request.json();
-
-  console.log("Request body:", { firstName, lastName, email });
 
   if (!firstName || !lastName || !email) {
     return NextResponse.json(
@@ -41,8 +36,6 @@ export async function POST(request) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    console.log("User found:", user);
-
     const result = await db.collection("users").updateOne(
       { _id: new ObjectId(token.id) },
       {
@@ -55,8 +48,6 @@ export async function POST(request) {
     );
 
     await client.close();
-
-    console.log("Update result:", result);
 
     if (result.matchedCount === 0) {
       console.log("No document matched for update");

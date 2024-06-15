@@ -1,15 +1,25 @@
 "use client";
 
+import { useEffect } from "react";
+import { useUser } from "@/contexts/UserContext";
 import Link from "next/link";
 import Button from "./Button";
-import { useSession } from "next-auth/react";
 
 export function SideMenu() {
-  const { data: session, status } = useSession();
+  //Context
+  const { user, fetchUser, status, session } = useUser();
 
-  if (status === "loading") {
+  //Cycle
+  useEffect(() => {
+    if (session) {
+      fetchUser();
+    }
+  }, [session]);
+
+  //Loading session
+  if (status === "loading" || !user) {
     return (
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center w-full h-full">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="1em"
@@ -33,7 +43,7 @@ export function SideMenu() {
     );
   }
 
-  if (status === "unauthenticated" || !session) {
+  if (status === "unauthenticated") {
     return <div>User is not authenticated</div>;
   }
 
@@ -51,7 +61,7 @@ export function SideMenu() {
   return (
     <div className="flex flex-col p-5 border-gradient h-[100vh] relative">
       <h1 className="mb-[80px] font-semibold text-[1.5em] text-center">
-        Bienvenue <br /> {session.user.firstname}
+        Bienvenue <br /> {user.firstname}
       </h1>
 
       <Link href={"/authentifier/create/date"}>
