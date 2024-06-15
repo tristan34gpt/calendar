@@ -13,14 +13,15 @@ export const authOptions = {
         const { email, password } = credentials;
 
         try {
+          console.log("Connecting to MongoDB...");
           // Connect to the MongoDB
           const client = await MongoClient.connect(process.env.MONGODB_CLIENT);
 
+          console.log("Connected to MongoDB. Fetching user...");
           // Connect to the MongoDB database
           const db = client.db(process.env.MONGODB_DATABASE);
 
-          // First to the MongoDB database
-          // Select the "users" collection
+          // Find the user in the MongoDB database
           let user = await db
             .collection("users")
             .find({ email })
@@ -33,19 +34,18 @@ export const authOptions = {
             throw new Error("Cet utilisateur n'existe pas");
           }
 
-          //SECOND: verify the password
-          const ispasswordValid = await bcrypt.compare(
+          // Verify the password
+          const isPasswordValid = await bcrypt.compare(
             password,
             user[0].password
           );
 
           // If the password isn't valid
-          if (!ispasswordValid) {
+          if (!isPasswordValid) {
             await client.close();
             throw new Error("Le mot de passe est incorrect");
           }
 
-          //Third: our user is authenticated
           // Format user
           user = user.map((user) => ({
             _id: user._id.toString(),
@@ -57,6 +57,7 @@ export const authOptions = {
           await client.close();
           return user;
         } catch (e) {
+          console.error("Authorization error:", e);
           throw new Error(e.message);
         }
       },
@@ -73,10 +74,10 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
+        token.id = user._id; // Assurez-vous d'utiliser _id ici
         token.firstname = user.firstname;
         token.lastname = user.lastname;
-        token.email = user.email; // Ajout de l'email au token
+        token.email = user.email;
       }
       return token;
     },
@@ -85,7 +86,7 @@ export const authOptions = {
         session.user.id = token.id;
         session.user.firstname = token.firstname;
         session.user.lastname = token.lastname;
-        session.user.email = token.email; // Ajout de l'email à la session
+        session.user.email = token.email;
       }
 
       try {
@@ -97,7 +98,7 @@ export const authOptions = {
 
         // Retrieve reservations for the user
         const reservations = await db
-          .collection("reservation")
+          .collection("reservation") // Assurez-vous que le nom de la collection est correct
           .find({ userEmail: session.user.email })
           .toArray();
 

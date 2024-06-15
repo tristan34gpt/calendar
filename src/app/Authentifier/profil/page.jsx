@@ -1,17 +1,16 @@
 "use client";
-
-import { updateUser } from "@/actions/create-user";
 import Button from "@/components/Button";
-import { useSessionWithRefresh } from "@/hook/useSessionWithRefresh";
 import { checkEmail } from "@/utils/check-emailsyntax";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Profil() {
-  const { session, status, refreshSession, isRefreshing } =
-    useSessionWithRefresh();
+  const { data: session, status } = useSession();
 
-  if (status === "loading" || isRefreshing) {
+  console.log(session);
+
+  if (status === "loading") {
     <div className="flex justify-center items-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -72,6 +71,7 @@ export default function Profil() {
   const [lastName, setLastName] = useState(session.user.lastname);
   const [email, setEmail] = useState(session.user.email);
 
+  //cycle
   useEffect(() => {
     if (session) {
       setFirstName(session.user.firstname);
@@ -79,31 +79,45 @@ export default function Profil() {
       setEmail(session.user.email);
     }
   }, [session]);
-  //function
 
+  //function
   const updateProfile = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setLoading(false);
 
     if (!firstName || !lastName || !email) {
-      setLoading(false);
+      setLoading(true);
       return toast.error("Aucun champ ne doit être vide !");
     }
 
     if (!checkEmail(email)) {
-      setLoading(false);
+      setLoading(true);
       return toast.error("Veuillez entrer un email valide");
     }
 
     try {
-      await updateUser(firstName, lastName, email);
-      await refreshSession(); // Rafraîchir la session après mise à jour
+      const response = await fetch("/api/updateProfilUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firstName, lastName, email }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setLoading(true);
+        return toast.error(errorData);
+      }
+
+      const data = await response.json();
+      toast.success("Profil mis a jours");
       setModalEditProfil(false);
-      setLoading(false);
-      toast.success("Mise à jour du profil avec succès");
+      setLoading(true);
+      return toast.success("Mise à jour du profil avec succès");
     } catch (e) {
-      setLoading(false);
-      toast.error(e.message);
+      setLoading(true);
+      return toast.error(e.message);
     }
   };
 

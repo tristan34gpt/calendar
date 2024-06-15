@@ -1,20 +1,25 @@
+import { updateProfilUser } from "@/actions/uptdate-profil";
 import { useSession } from "next-auth/react";
-import { useState, useEffect, useCallback } from "react";
 
-export function useSessionWithRefresh() {
-  const { data: session, status, update } = useSession();
-  const [isRefreshing, setIsRefreshing] = useState(false);
+export const useSessionWithRefresh = () => {
+  const { data: session, status } = useSession();
 
-  const refreshSession = useCallback(async () => {
-    setIsRefreshing(true);
-    await update(); // Appelle la fonction pour rafraîchir la session
-    setIsRefreshing(false);
-  }, [update]);
+  const refreshSession = async (updatedUser) => {
+    const response = await fetch("/api/user/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updateProfilUser),
+    });
 
-  return {
-    session,
-    status,
-    refreshSession,
-    isRefreshing,
+    if (!response.ok) {
+      throw new Error("Failed to refresh session");
+    }
+
+    const data = await response.json();
+    return data.user;
   };
-}
+
+  return { session, status, refreshSession };
+};

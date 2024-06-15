@@ -1,56 +1,47 @@
-"use server";
+// "use server";
 
-import { checkEmail } from "@/utils/check-emailsyntax";
-import { MongoClient } from "mongodb";
+// import { checkEmail } from "@/utils/check-emailsyntax";
+// import { MongoClient, ObjectId } from "mongodb";
 
-export const updateProfilUser = async (firstname, lastname, email) => {
-  if (!firstname || !lastname || !email) {
-    //Notification
-    console.log("Champ manquant");
+// export const updateProfilUser = async (id, firstname, lastname, email) => {
+//   if (!id || !firstname || !lastname || !email) {
+//     console.log("Champ manquant");
+//     throw new Error("Aucun champ ne doit être vide !");
+//   }
 
-    throw new Error("Aucun champ ne doit être vide !");
-  }
+//   if (!checkEmail(email)) {
+//     throw new Error("Veuillez entrer un email valide");
+//   }
 
-  //Check if the email is valide
-  if (!checkEmail(email)) {
-    throw new Error("veuillez entrez un email valide");
-  }
+//   const client = await MongoClient.connect(process.env.MONGODB_CLIENT, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   });
 
-  //connect to the MongoDB cluster
+//   const db = client.db(process.env.MONGODB_DATABASE);
 
-  const client = await MongoClient.connect(process.env.MONGODB_CLIENT);
+//   try {
+//     // Mettre à jour l'utilisateur
+//     const result = await db.collection("users").updateOne(
+//       { _id: new ObjectId(id) },
+//       {
+//         $set: {
+//           firstname,
+//           lastname,
+//           email,
+//         },
+//       }
+//     );
 
-  //connect to the MongoDB database
+//     console.log("Update result:", result);
 
-  const db = client.db(process.env.MONGODB_DATABASE);
+//     if (result.matchedCount === 0) {
+//       throw new Error("Utilisateur non trouvé");
+//     }
 
-  try {
-    // First: Verify if this email is already used
-    //Select th "users" collection
-
-    let user = await db.collection("users").find({ email }).limit(1).toArray();
-
-    //If the email is already used
-    if (user.length !== 0) {
-      await client.close();
-      throw new Error("Cet email est déja utilisé");
-    }
-
-    //twoo: Encrypt the password
-    const encryptedPassword = await bcrypt.hash(password, 10);
-
-    // THIRD: Create the user
-    await db.collection("users").insertOne({
-      firstname,
-      lastname,
-      email,
-      password: encryptedPassword,
-      creation: new Date(),
-    });
-  } catch (e) {
-    await client.close();
-    throw new Error(e);
-  }
-
-  await client.close();
-};
+//     await client.close();
+//   } catch (e) {
+//     await client.close();
+//     throw new Error(e.message);
+//   }
+// };

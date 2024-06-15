@@ -79,8 +79,6 @@ export default function Apercu() {
   const yearOptions = { year: "numeric" };
   const currentYear = date.toLocaleString("fr-FR", yearOptions);
 
-  console.log(session.user.reservations);
-
   return (
     <>
       <Link href={"/authentifier/agenda"}>
