@@ -26,11 +26,18 @@ export const infoDaysCalendar = async (date) => {
       .collection("reservation")
       .findOne({ userEmail: session.user.email });
 
-    // THIRD: Add info day in calendar
-    const result = await db.collection("reservation").insertOne({
-      userEmail: session.user.email,
-      days: date,
-    });
+    if (existingReservation) {
+      // if reseservation existing update bdd
+      await db
+        .collection("reservation")
+        .updateOne({ userEmail: session.user.email }, { $set: { days: date } });
+    } else {
+      // if reservation not existing so news collection
+      await db.collection("reservation").insertOne({
+        userEmail: session.user.email,
+        days: date,
+      });
+    }
   } catch (e) {
     throw new Error(e);
   }

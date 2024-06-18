@@ -5,7 +5,6 @@ import Input from "@/components/Input";
 import Logo from "@/components/Logo";
 
 // Library
-import { createUser } from "@/actions/create-user";
 import { checkEmail } from "@/utils/check-emailsyntax";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -40,7 +39,7 @@ export default function Signin() {
     }
 
     try {
-      await createUser(firstname, lastname, email, password);
+      await prepareCreateUser(firstname, lastname, email, password);
       //Success
       toast.success("Votre compte a bien été crée !");
       //redirect

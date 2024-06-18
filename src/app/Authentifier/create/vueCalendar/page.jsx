@@ -2,15 +2,30 @@
 
 import { ViewCalendar } from "@/actions/create-calendar";
 import Button from "@/components/Button";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function View() {
+  const { data: session, status } = useSession();
+
   //Variable
   const [view, setView] = useState("");
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (status === "authenticated" && session) {
+      console.log(session.user.reservations);
+      if (session.user.reservations) {
+        for (const reservation of session.user.reservations) {
+          setView(reservation.view);
+        }
+      }
+    }
+  }, [status, session]);
+
   //Function
 
   const addView = (newView) => {
@@ -24,7 +39,7 @@ export default function View() {
     try {
       await ViewCalendar(view);
       toast.success("Votre visibilité a été enregistrée");
-      router.push("/create/time");
+      router.push("/authentifier/create/time");
     } catch (e) {
       toast.error(e.message);
     }
@@ -43,7 +58,7 @@ export default function View() {
                   onClick={() => addView(newView)}
                   type={"button"}
                   className={`w-[400px] h-[40px] rounded-md m-1 text-white ${
-                    newView === view
+                    newView == view
                       ? " bg-red-300 text-white font-bold"
                       : "bg-gradiant-color"
                   }`}

@@ -95,7 +95,7 @@ export default function Login() {
           </p>
           <p>
             Inscrivez-vous{" "}
-            <Link href={"/inscription"}>
+            <Link href={"/auth/inscription"}>
               <span className="font-bold cursor-pointer">ici.</span>
             </Link>
           </p>

@@ -2,13 +2,32 @@
 
 import { questionsCalendar } from "@/actions/create-calendar";
 import Button from "@/components/Button";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Question() {
+  const { data: session, status } = useSession();
+
   const [modale, setModale] = useState(false);
   const [questions, setQuestions] = useState([]);
+
+  useEffect(() => {
+    if (status === "authenticated" && session) {
+      console.log(session.user.reservations);
+      if (session.user.reservations) {
+        const questions = [];
+        for (const reservation of session.user.reservations) {
+          //  setDates(days);
+          for (const question of reservation.questions)
+            questions.push(question);
+        }
+        setQuestions(questions);
+        console.log(questions);
+      }
+    }
+  }, [status, session]);
 
   const router = useRouter();
 
@@ -33,7 +52,7 @@ export default function Question() {
     try {
       await questionsCalendar(questions);
       toast.success("Enregistrez");
-      router.push("/agenda");
+      router.push("/authentifier/agenda");
     } catch (e) {
       toast.error(e.message);
     }
