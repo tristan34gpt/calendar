@@ -64,10 +64,12 @@ export default function Horraires() {
     };
 
     setShedule([newSchedule]);
+
     try {
-      await scheduleCalendar(schedule);
+      await scheduleCalendar(newSchedule);
       toast.success("Vos horaires sont enregistrés");
-      router.push("/authentifier/create/vueCalendar");
+      setModify(false);
+      // router.push("/authentifier/create/vueCalendar");
       setLoading(false);
     } catch (e) {
       toast.error(e.message);

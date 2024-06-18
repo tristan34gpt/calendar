@@ -1,8 +1,12 @@
 import { MongoClient, ObjectId } from "mongodb";
+import { getServerSession } from "next-auth";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function POST(request) {
+  const session = await getServerSession(authOptions);
+
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
@@ -35,7 +39,6 @@ export async function POST(request) {
       console.log("User not found:", token.id);
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
-
     const result = await db.collection("users").updateOne(
       { _id: new ObjectId(token.id) },
       {
@@ -47,11 +50,29 @@ export async function POST(request) {
       }
     );
 
-    await client.close();
-
     if (result.matchedCount === 0) {
       console.log("No document matched for update");
       return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    // Update userEmail in the reservation collection
+    const reservationResult = await db.collection("reservation").updateOne(
+      { userEmail: user.email },
+      {
+        $set: {
+          userEmail: email,
+        },
+      }
+    );
+
+    await client.close();
+
+    if (reservationResult.matchedCount === 0) {
+      console.log("No reservations matched for update");
+      return NextResponse.json(
+        { message: "Reservations not found" },
+        { status: 404 }
+      );
     }
     console.log("User updated successfully");
     return NextResponse.json(
