@@ -8,7 +8,7 @@ export function Reservation({
   return (
     <>
       <div className="flex relative">
-        <button className="bg-gradiant-color rounded-md flex justify-between w-[400px] h-[30px] text-white items-center ">
+        <button className="bg-gradiant-color rounded-md w-[400px] h-[30px] text-white items-center  ">
           {children}
         </button>
         <button

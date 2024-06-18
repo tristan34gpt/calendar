@@ -70,99 +70,102 @@ export default function Horraires() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full">
-      {/* Afficher les horaires enregistrés */}
-      {mySchedule.length > 0 && !modify && (
-        <div>
-          <h2 className="text-[1.2em] text-center font-semibold">
-            Vos horaires
-          </h2>
-          {mySchedule.map((sched, index) => (
-            <div
-              key={index}
-              className="mt-2 flex flex-col justify-center items-center"
-            >
-              <p>
-                Disponible de
-                <span className="font-semibold"> {sched.startTime} </span> à
-                <span className="font-semibold"> {sched.startPauseTime} </span>{" "}
-                et de{" "}
-                <span className="font-semibold"> {sched.endPauseTime} </span> à
-                <span className="font-semibold"> {sched.endTime} </span>
-              </p>
-              <Button
-                onClick={() => {
-                  setModify(true);
-                }}
-                className={"w-[400px] h-[30px] rounded-md mt-5"}
+    <>
+      <p>dd</p>
+      <div className="flex flex-col justify-center items-center w-full">
+        {/* Afficher les horaires enregistrés */}
+        {mySchedule.length > 0 && !modify && (
+          <div>
+            <h2 className="text-[1.2em] text-center font-semibold">
+              Vos horaires
+            </h2>
+            {mySchedule.map((sched, index) => (
+              <div
+                key={index}
+                className="mt-2 flex flex-col justify-center items-center"
               >
-                Modifier vos horraire
-              </Button>
-              <Link href={"/authentifier/create/vueCalendar"}>
-                <Button className={"w-[400px] h-[30px] rounded-md mt-5"}>
-                  Suivant
+                <p>
+                  Disponible de
+                  <span className="font-semibold"> {sched.startTime} </span> à
+                  <span className="font-semibold">
+                    {" "}
+                    {sched.startPauseTime}{" "}
+                  </span>{" "}
+                  et de{" "}
+                  <span className="font-semibold"> {sched.endPauseTime} </span>{" "}
+                  à<span className="font-semibold"> {sched.endTime} </span>
+                </p>
+                <Button
+                  onClick={() => {
+                    setModify(true);
+                  }}
+                  className={"w-[400px] h-[30px] rounded-md mt-5"}
+                >
+                  Modifier vos horraire
                 </Button>
-              </Link>
-            </div>
-          ))}
-        </div>
-      )}
+                <Link href={"/authentifier/create/vueCalendar"}>
+                  <Button className={"w-[400px] h-[30px] rounded-md mt-5"}>
+                    Suivant
+                  </Button>
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
 
-      {mySchedule.length > 0 && modify && (
-        <div>
-          <h1 className=" text-center text-[1.3em] font-semibold mb-[70px] ">
-            Renseignez vos horaires
-          </h1>
-          <form action={createShedule}>
-            {/* Preview */}
-
-            <div className="text-center">
-              <p className="text-[1.2em]">Heure de début</p>
-
-              <input
-                className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px]"
-                type="time"
-                ref={startTime}
-              />
-              <div>
-                <p className="text-[1.2em] mt-5">Horraire indisponible</p>
+        {(mySchedule.length <= 0 || modify) && (
+          <div>
+            <h1 className="text-center text-[1.3em] font-semibold mb-[70px]">
+              Renseignez vos horaires
+            </h1>
+            <form action={createShedule}>
+              <div className="text-center">
+                <p className="text-[1.2em]">Heure de début</p>
                 <input
                   className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px]"
                   type="time"
-                  ref={startPauseTime}
+                  ref={startTime}
                 />
+                <div>
+                  <p className="text-[1.2em] mt-5">Horaires indisponibles</p>
+                  <input
+                    className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px]"
+                    type="time"
+                    ref={startPauseTime}
+                  />
+                  <input
+                    className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px] ml-5"
+                    type="time"
+                    ref={endPauseTime}
+                  />
+                </div>
+                <p className="text-[1.2em] mt-5">Heure de fin</p>
                 <input
-                  className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px] ml-5"
+                  className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px]"
                   type="time"
-                  ref={endPauseTime}
+                  ref={endTime}
                 />
               </div>
-              <p className="text-[1.2em] mt-5">Heure de fin</p>
-              <input
-                className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px]"
-                type="time"
-                ref={endTime}
-              />
-            </div>
-            <Button
-              type={"submit"}
-              className={"w-[400px] h-[40px] rounded-md mt-[50px]"}
-            >
-              Valider
-            </Button>
-            {mySchedule.length > 0 && (
               <Button
-                onClick={() => {
-                  setModify(false);
-                }}
-                className={"w-[400px] h-[40px] rounded-md mt-5 block"}
+                type={"submit"}
+                className={"w-[400px] h-[40px] rounded-md mt-[50px]"}
               >
-                Annuler les modifications
+                Valider
               </Button>
-            )}
-          </form>
-        </div>
-      )}
-    </div>
+              {mySchedule.length > 0 && (
+                <Button
+                  onClick={() => {
+                    setModify(false);
+                  }}
+                  className={"w-[400px] h-[40px] rounded-md mt-5 block"}
+                >
+                  Annuler les modifications
+                </Button>
+              )}
+            </form>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

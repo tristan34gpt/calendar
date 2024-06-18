@@ -11,6 +11,7 @@ export default function Date() {
   // Variables
   const { data: session, status } = useSession();
   const [dates, setDates] = useState([]);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const week = [
     "Lundi",
@@ -48,14 +49,18 @@ export default function Date() {
 
   const createDate = async (event) => {
     event.preventDefault();
+    setLoading(true);
     if (dates.length === 0) {
+      setLoading(false);
       return toast.error("Vous devez choisir au moins 1 jour");
     }
     try {
       await infoDaysCalendar(dates);
       toast.success("Enregistrez");
       router.push("/authentifier/create/horraire");
+      setLoading(false);
     } catch (e) {
+      setLoading(false);
       toast.error(e.message);
     }
   };
@@ -98,12 +103,37 @@ export default function Date() {
             <p>Pas de sessions</p>
           )}
         </div>
-        <Button
-          type="submit"
-          className="mt-[40px] w-[500px] h-[40px] rounded-md text-white flex justify-center items-center"
-        >
-          Valider
-        </Button>
+        {!loading ? (
+          <Button
+            type="submit"
+            className="mt-[40px] w-[500px] h-[40px] rounded-md text-white flex justify-center items-center"
+          >
+            Valider
+          </Button>
+        ) : (
+          <div className="flex justify-center items-center mt-[40px]">
+            {" "}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1.2em"
+              height="1.2em"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+              >
+                <animateTransform
+                  attributeName="transform"
+                  dur="0.75s"
+                  repeatCount="indefinite"
+                  type="rotate"
+                  values="0 12 12;360 12 12"
+                ></animateTransform>
+              </path>
+            </svg>
+          </div>
+        )}
       </form>
     </div>
   );

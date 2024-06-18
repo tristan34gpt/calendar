@@ -59,7 +59,7 @@ export function SideMenu() {
   };
 
   return (
-    <div className="flex flex-col p-5 border-gradient h-[100vh] relative">
+    <div className="flex flex-col p-5 border-gradiant-color h-[100vh] relative">
       <h1 className="mb-[80px] font-semibold text-[1.5em] text-center">
         Bienvenue <br /> {user.firstname}
       </h1>
