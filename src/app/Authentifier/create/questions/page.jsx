@@ -12,6 +12,7 @@ export default function Question() {
 
   const [modale, setModale] = useState(false);
   const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (status === "authenticated" && session) {
@@ -49,12 +50,15 @@ export default function Question() {
   };
 
   const createQuestions = async (questions) => {
+    setLoading(true);
     try {
       await questionsCalendar(questions);
       toast.success("Enregistrez");
       router.push("/authentifier/agenda");
+      setLoading(false);
     } catch (e) {
       toast.error(e.message);
+      setLoading(false);
     }
   };
 
@@ -73,12 +77,12 @@ export default function Question() {
         </button>
 
         {modale && (
-          <div className=" mt-2 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center bg-gradiant-color w-[600px] h-[500px] text-white text-center rounded-md">
+          <div className="mt-2 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center bg-gradiant-color w-[600px] h-[500px] text-white text-center rounded-md">
             <button
               onClick={() => {
                 setModale(false);
               }}
-              className="absolute text-[1em] font-medium  w-[40px] h-[40px] right-5 top-1 text-center flex justify-center items-center hover:text-[1.2em] transition-all hover:text-red-900"
+              className="absolute text-[1em] font-medium w-[40px] h-[40px] right-5 top-1 text-center flex justify-center items-center hover:text-[1.2em] transition-all hover:text-red-900"
             >
               fermer
             </button>
@@ -89,7 +93,7 @@ export default function Question() {
 
               <textarea
                 className="p-5 w-[500px] rounded-md bg-gradiant-transparent focus:outline-none text-black"
-                placeholder="Exemple : Qu'elle est votre prénom"
+                placeholder="Exemple : Quel est votre prénom"
                 ref={questionsRef}
                 required
               ></textarea>
@@ -104,37 +108,66 @@ export default function Question() {
           </div>
         )}
       </div>
-      <Button
-        onClick={() => createQuestions(questions)}
-        className={"w-[400px] h-[30px] rounded-md mt-[30px]"}
-      >
-        Valider
-      </Button>
-      {questions.length > 0 && (
-        <div className="flex flex-col w-full justify-center items-center mt-5">
-          <h3 className="text-center text-[1.3em] font-semibold mb-5">
-            Vos Questions
-          </h3>
-          {questions.map((question, index) => (
-            <div key={index} className="flex flex-row m-1 ">
-              <p className="bg-gradiant-color p-2 rounded-md  text-white">
-                {question}
-              </p>
-              <button className="ml-2" onClick={() => removeQuestion(index)}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1em"
-                  height="1em"
-                  viewBox="0 0 256 256"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M216 48h-36V36a28 28 0 0 0-28-28h-48a28 28 0 0 0-28 28v12H40a12 12 0 0 0 0 24h4v136a20 20 0 0 0 20 20h128a20 20 0 0 0 20-20V72h4a12 12 0 0 0 0-24M100 36a4 4 0 0 1 4-4h48a4 4 0 0 1 4 4v12h-56Zm88 168H68V72h120Zm-72-100v64a12 12 0 0 1-24 0v-64a12 12 0 0 1 24 0m48 0v64a12 12 0 0 1-24 0v-64a12 12 0 0 1 24 0"
-                  ></path>
-                </svg>
-              </button>
+      {!loading ? (
+        <>
+          <Button
+            onClick={() => createQuestions(questions)}
+            className={"w-[400px] h-[30px] rounded-md mt-[30px]"}
+          >
+            Valider
+          </Button>
+          {questions.length > 0 && (
+            <div className="flex flex-col w-full justify-center items-center mt-5">
+              <h3 className="text-center text-[1.3em] font-semibold mb-5">
+                Vos Questions
+              </h3>
+              {questions.map((question, index) => (
+                <div key={index} className="flex flex-row m-1">
+                  <p className="bg-gradiant-color p-2 rounded-md text-white">
+                    {question}
+                  </p>
+                  <button
+                    className="ml-2"
+                    onClick={() => removeQuestion(index)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1em"
+                      height="1em"
+                      viewBox="0 0 256 256"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M216 48h-36V36a28 28 0 0 0-28-28h-48a28 28 0 0 0-28 28v12H40a12 12 0 0 0 0 24h4v136a20 20 0 0 0 20 20h128a20 20 0 0 0 20-20V72h4a12 12 0 0 0 0-24M100 36a4 4 0 0 1 4-4h48a4 4 0 0 1 4 4v12h-56Zm88 168H68V72h120Zm-72-100v64a12 12 0 0 1-24 0v-64a12 12 0 0 1 24 0m48 0v64a12 12 0 0 1-24 0v-64a12 12 0 0 1 24 0"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
+        </>
+      ) : (
+        <div className="flex justify-center items-center mt-[40px]">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1.2em"
+            height="1.2em"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+            >
+              <animateTransform
+                attributeName="transform"
+                dur="0.75s"
+                repeatCount="indefinite"
+                type="rotate"
+                values="0 12 12;360 12 12"
+              ></animateTransform>
+            </path>
+          </svg>
         </div>
       )}
     </div>
