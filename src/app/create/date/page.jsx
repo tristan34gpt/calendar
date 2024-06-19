@@ -60,7 +60,7 @@ export default function Date() {
     try {
       await infoDaysCalendar(dates);
       toast.success("Enregistrez");
-      router.push("/authentifier/create/horraire");
+      router.push("/create/horraire");
       setLoading(false);
     } catch (e) {
       setLoading(false);
