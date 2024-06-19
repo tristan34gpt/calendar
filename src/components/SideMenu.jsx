@@ -49,19 +49,19 @@ export function SideMenu() {
         Bienvenue <br /> {user.firstname}
       </h1>
 
-      <Link href={"/authentifier/create/date"}>
+      <Link href={"/create/date"}>
         <Button className={"rounded-md w-[250px] h-[auto] p-1 "}>
           {verifyCalendar()}
         </Button>
       </Link>
       <div className="mt-[80px] mb-[80px] flex flex-col text-[1.3em] font-medium">
-        <Link className="m-2" href={"/authentifier"}>
+        <Link className="m-2" href={"/"}>
           Acceuil
         </Link>
-        <Link className="m-2" href={"/authentifier/agenda"}>
+        <Link className="m-2" href={"/agenda"}>
           Mon agenda
         </Link>
-        <Link className="m-2" href={"/authentifier/profil"}>
+        <Link className="m-2" href={"/profil"}>
           Profil
         </Link>
       </div>
