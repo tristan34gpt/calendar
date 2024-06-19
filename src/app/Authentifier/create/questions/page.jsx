@@ -2,13 +2,13 @@
 
 import { questionsCalendar } from "@/actions/create-calendar";
 import Button from "@/components/Button";
-import { useSession } from "next-auth/react";
+import { useUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Question() {
-  const { data: session, status } = useSession();
+  const { session, status, reservation } = useUser();
 
   const [modale, setModale] = useState(false);
   const [questions, setQuestions] = useState([]);
@@ -16,16 +16,16 @@ export default function Question() {
 
   useEffect(() => {
     if (status === "authenticated" && session) {
-      console.log(session.user.reservations);
-      if (session.user.reservations) {
+      if (reservation) {
         const questions = [];
-        for (const reservation of session.user.reservations) {
-          //  setDates(days);
-          for (const question of reservation.questions)
-            questions.push(question);
+        for (const reserv of reservation) {
+          if (reserv.questions.length > 0) {
+            for (const question of reserv.questions) {
+              questions.push(question);
+            }
+          }
         }
         setQuestions(questions);
-        console.log(questions);
       }
     }
   }, [status, session]);

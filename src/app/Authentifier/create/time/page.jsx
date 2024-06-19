@@ -2,6 +2,7 @@
 
 import { timeCalendar } from "@/actions/create-calendar";
 import Button from "@/components/Button";
+import { useUser } from "@/contexts/UserContext";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Time() {
-  const { data: session, status } = useSession();
+  const { session, status, reservation } = useUser();
 
   const [time, setTime] = useState();
   const [myTime, setMyTime] = useState(null);
@@ -21,11 +22,11 @@ export default function Time() {
 
   useEffect(() => {
     if (status === "authenticated" && session) {
-      console.log(session.user.reservations);
-      if (session.user.reservations) {
-        for (const reservation of session.user.reservations) {
-          //  setDates(days);
-          setMyTime(reservation.time);
+      if (reservation) {
+        for (const reserv of reservation) {
+          if (reserv.time) {
+            setMyTime(reserv.time);
+          }
         }
       }
     }

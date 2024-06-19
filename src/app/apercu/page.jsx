@@ -1,11 +1,21 @@
 "use client";
 
 import Logo from "@/components/Logo";
-import { useSession } from "next-auth/react";
+import { useUser } from "@/contexts/UserContext";
 import Link from "next/link";
 
 export default function Apercu() {
-  const { data: session, status } = useSession();
+  const { user, session, reservation, status } = useUser();
+  const [reserv, setReserv] = useState([]);
+
+  //Cycle
+  useEffect(() => {
+    if (reservation) {
+      for (const reserv of reservation) {
+        setReserv(reserv);
+      }
+    }
+  }, [reservation]);
 
   if (status === "loading") {
     return (

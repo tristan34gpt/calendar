@@ -2,6 +2,7 @@
 
 import { scheduleCalendar } from "@/actions/create-calendar";
 import Button from "@/components/Button";
+import { useUser } from "@/contexts/UserContext";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,7 +10,8 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Horraires() {
-  const { data: session, status } = useSession();
+  const { session, status, reservation } = useUser();
+
   const startTime = useRef(null);
   const endTime = useRef(null);
   const startPauseTime = useRef(null);
@@ -22,23 +24,18 @@ export default function Horraires() {
 
   const router = useRouter();
 
-  // console.log(session);
-
   useEffect(() => {
     if (status === "authenticated" && session) {
-      // console.log(session.user.reservations);
-      if (session.user.reservations) {
+      if (reservation) {
         const schedules = [];
-        for (const reservation of session.user.reservations) {
-          for (const schedule of reservation.schedule) {
-            schedules.push(schedule);
+        for (const reserv of reservation) {
+          if (reserv.schedule && typeof reserv.schedule === "object") {
+            schedules.push(reserv.schedule);
           }
+          setMyShedule(schedules);
         }
-        setMyShedule(schedules);
       }
     }
-
-    console.log(mySchedule);
   }, [status, session]);
 
   //Function
@@ -69,7 +66,7 @@ export default function Horraires() {
       await scheduleCalendar(newSchedule);
       toast.success("Vos horaires sont enregistrés");
       setModify(false);
-      // router.push("/authentifier/create/vueCalendar");
+      router.push("/authentifier/create/vueCalendar");
       setLoading(false);
     } catch (e) {
       toast.error(e.message);
@@ -78,131 +75,122 @@ export default function Horraires() {
   };
 
   return (
-    <>
-      <p>dd</p>
-      <div className="flex flex-col justify-center items-center w-full">
-        {/* Afficher les horaires enregistrés */}
-        {mySchedule.length > 0 && !modify && (
-          <div>
-            <h2 className="text-[1.2em] text-center font-semibold">
-              Vos horaires
-            </h2>
-            {mySchedule.map((sched, index) => (
-              <div
-                key={index}
-                className="mt-2 flex flex-col justify-center items-center"
+    <div className="flex flex-col justify-center items-center w-full">
+      {/* Afficher les horaires enregistrés */}
+      {mySchedule.length > 0 && !modify && (
+        <div>
+          <h2 className="text-[1.2em] text-center font-semibold">
+            Vos horaires
+          </h2>
+          {mySchedule.map((sched, index) => (
+            <div
+              key={index}
+              className="mt-2 flex flex-col justify-center items-center"
+            >
+              <p>
+                Disponible de
+                <span className="font-semibold"> {sched.startTime} </span> à
+                <span className="font-semibold"> {sched.startPauseTime} </span>{" "}
+                et de
+                <span className="font-semibold"> {sched.endPauseTime} </span> à
+                <span className="font-semibold"> {sched.endTime} </span>
+              </p>
+              <Button
+                onClick={() => {
+                  setModify(true);
+                }}
+                className={"w-[400px] h-[30px] rounded-md mt-5"}
               >
-                <p>
-                  Disponible de
-                  <span className="font-semibold"> {sched.startTime} </span> à
-                  <span className="font-semibold">
-                    {" "}
-                    {sched.startPauseTime}{" "}
-                  </span>{" "}
-                  et de
-                  <span className="font-semibold">
-                    {" "}
-                    {sched.endPauseTime}{" "}
-                  </span>{" "}
-                  à<span className="font-semibold"> {sched.endTime} </span>
-                </p>
-                <Button
-                  onClick={() => {
-                    setModify(true);
-                  }}
-                  className={"w-[400px] h-[30px] rounded-md mt-5"}
-                >
-                  Modifier vos horaires
+                Modifier vos horaires
+              </Button>
+              <Link href={"/authentifier/create/vueCalendar"}>
+                <Button className={"w-[400px] h-[30px] rounded-md mt-5"}>
+                  Suivant
                 </Button>
-                <Link href={"/authentifier/create/vueCalendar"}>
-                  <Button className={"w-[400px] h-[30px] rounded-md mt-5"}>
-                    Suivant
-                  </Button>
-                </Link>
-              </div>
-            ))}
-          </div>
-        )}
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
 
-        {(mySchedule.length === 0 || modify) && (
-          <div>
-            <h1 className="text-center text-[1.3em] font-semibold mb-[70px]">
-              Renseignez vos horaires
-            </h1>
-            <form onSubmit={createShedule}>
-              <div className="text-center">
-                <p className="text-[1.2em]">Heure de début</p>
+      {(mySchedule.length === 0 || modify) && (
+        <div>
+          <h1 className="text-center text-[1.3em] font-semibold mb-[70px]">
+            Renseignez vos horaires
+          </h1>
+          <form onSubmit={createShedule}>
+            <div className="text-center">
+              <p className="text-[1.2em]">Heure de début</p>
+              <input
+                className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px]"
+                type="time"
+                ref={startTime}
+              />
+              <div>
+                <p className="text-[1.2em] mt-5">Horaires indisponibles</p>
                 <input
                   className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px]"
                   type="time"
-                  ref={startTime}
+                  ref={startPauseTime}
                 />
-                <div>
-                  <p className="text-[1.2em] mt-5">Horaires indisponibles</p>
-                  <input
-                    className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px]"
-                    type="time"
-                    ref={startPauseTime}
-                  />
-                  <input
-                    className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px] ml-5"
-                    type="time"
-                    ref={endPauseTime}
-                  />
-                </div>
-                <p className="text-[1.2em] mt-5">Heure de fin</p>
                 <input
-                  className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px]"
+                  className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px] ml-5"
                   type="time"
-                  ref={endTime}
+                  ref={endPauseTime}
                 />
               </div>
-              {!loading ? (
-                <>
+              <p className="text-[1.2em] mt-5">Heure de fin</p>
+              <input
+                className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px]"
+                type="time"
+                ref={endTime}
+              />
+            </div>
+            {!loading ? (
+              <>
+                <Button
+                  type={"submit"}
+                  className={"w-[400px] h-[40px] rounded-md mt-[50px]"}
+                >
+                  Valider
+                </Button>
+                {mySchedule.length > 0 && (
                   <Button
-                    type={"submit"}
-                    className={"w-[400px] h-[40px] rounded-md mt-[50px]"}
+                    onClick={() => {
+                      setModify(false);
+                    }}
+                    className={"w-[400px] h-[40px] rounded-md mt-5 block"}
                   >
-                    Valider
+                    Annuler les modifications
                   </Button>
-                  {mySchedule.length > 0 && (
-                    <Button
-                      onClick={() => {
-                        setModify(false);
-                      }}
-                      className={"w-[400px] h-[40px] rounded-md mt-5 block"}
-                    >
-                      Annuler les modifications
-                    </Button>
-                  )}
-                </>
-              ) : (
-                <div className="flex justify-center items-center mt-[40px]">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.2em"
-                    height="1.2em"
-                    viewBox="0 0 24 24"
+                )}
+              </>
+            ) : (
+              <div className="flex justify-center items-center mt-[40px]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
                   >
-                    <path
-                      fill="currentColor"
-                      d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
-                    >
-                      <animateTransform
-                        attributeName="transform"
-                        dur="0.75s"
-                        repeatCount="indefinite"
-                        type="rotate"
-                        values="0 12 12;360 12 12"
-                      ></animateTransform>
-                    </path>
-                  </svg>
-                </div>
-              )}
-            </form>
-          </div>
-        )}
-      </div>
-    </>
+                    <animateTransform
+                      attributeName="transform"
+                      dur="0.75s"
+                      repeatCount="indefinite"
+                      type="rotate"
+                      values="0 12 12;360 12 12"
+                    ></animateTransform>
+                  </path>
+                </svg>
+              </div>
+            )}
+          </form>
+        </div>
+      )}
+    </div>
   );
 }

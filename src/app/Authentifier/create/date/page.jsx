@@ -2,6 +2,7 @@
 
 import { createCalendar, infoDaysCalendar } from "@/actions/create-calendar";
 import Button from "@/components/Button";
+import { useUser } from "@/contexts/UserContext";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -9,7 +10,7 @@ import { toast } from "react-toastify";
 
 export default function Date() {
   // Variables
-  const { data: session, status } = useSession();
+  const { session, reservation, status } = useUser();
   const [dates, setDates] = useState([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -25,12 +26,14 @@ export default function Date() {
 
   useEffect(() => {
     if (status === "authenticated" && session) {
-      console.log(session.user.reservations);
-      if (session.user.reservations) {
+      if (reservation) {
+        console.log(reservation);
         const days = [];
-        for (const reservation of session.user.reservations) {
-          for (const day of reservation.days) {
-            days.push(day);
+        for (const reserv of reservation) {
+          if (reserv.days.length > 0) {
+            for (const day of reserv.days) {
+              days.push(day);
+            }
           }
         }
         setDates(days);

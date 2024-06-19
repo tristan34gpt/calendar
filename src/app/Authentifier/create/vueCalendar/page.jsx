@@ -2,13 +2,14 @@
 
 import { ViewCalendar } from "@/actions/create-calendar";
 import Button from "@/components/Button";
+import { useUser } from "@/contexts/UserContext";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function View() {
-  const { data: session, status } = useSession();
+  const { session, status, reservation } = useUser();
 
   //Variable
   const [view, setView] = useState("");
@@ -18,10 +19,11 @@ export default function View() {
 
   useEffect(() => {
     if (status === "authenticated" && session) {
-      console.log(session.user.reservations);
-      if (session.user.reservations) {
-        for (const reservation of session.user.reservations) {
-          setView(reservation.view);
+      if (reservation) {
+        for (const reserv of reservation) {
+          if (reserv.view) {
+            setView(reserv.view);
+          }
         }
       }
     }

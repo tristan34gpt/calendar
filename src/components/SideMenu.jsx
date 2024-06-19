@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "@/contexts/UserContext";
 import Link from "next/link";
 import Button from "./Button";
@@ -9,6 +9,7 @@ import Loading from "./Loading";
 export function SideMenu() {
   //Context
   const { user, fetchUser, session, reservation, fetchReservation } = useUser();
+  const [reserv, setReserv] = useState([]);
 
   //Cycle
   useEffect(() => {
@@ -20,7 +21,9 @@ export function SideMenu() {
 
   useEffect(() => {
     if (reservation) {
-      console.log(reservation);
+      for (const reserv of reservation) {
+        setReserv(reserv);
+      }
     }
   }, [reservation]);
 
@@ -28,11 +31,11 @@ export function SideMenu() {
     if (reservation.length < 1) {
       return "+ créez";
     } else if (
-      (reservation.length > 1 && reservation.date) ||
-      !reservation.schedule ||
-      !reservation.view ||
-      !reservation.time ||
-      !reservation.questions
+      (reservation.length > 1 && reserv.date) ||
+      !reserv.schedule ||
+      !reserv.view ||
+      !reserv.time ||
+      !reserv.questions
     ) {
       return "Finir sont Calendar";
     } else {
