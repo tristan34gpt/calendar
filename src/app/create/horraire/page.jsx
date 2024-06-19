@@ -66,7 +66,7 @@ export default function Horraires() {
       await scheduleCalendar(newSchedule);
       toast.success("Vos horaires sont enregistrés");
       setModify(false);
-      router.push("/authentifier/create/vueCalendar");
+      router.push("/create/vueCalendar");
       setLoading(false);
     } catch (e) {
       toast.error(e.message);
