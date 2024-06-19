@@ -54,7 +54,7 @@ export default function Question() {
     try {
       await questionsCalendar(questions);
       toast.success("Enregistrez");
-      router.push("/authentifier/agenda");
+      router.push("/agenda");
       setLoading(false);
     } catch (e) {
       toast.error(e.message);
