@@ -45,7 +45,7 @@ export default function Time() {
     try {
       await timeCalendar(time);
       toast.success("Durée de l'appel enregistrez");
-      router.push("/authentifier/create/questions");
+      router.push("/create/questions");
       setLoading(false);
     } catch (e) {
       setLoading(false);
@@ -72,7 +72,7 @@ export default function Time() {
               ? " Anuler les modification"
               : " Modifer la durée de l'appel"}
           </Button>
-          <Link href={"/authentifier/create/questions"}>
+          <Link href={"/create/questions"}>
             <Button className={"w-[300px] rounded-md h-[30px] mt-5 mb-5"}>
               Suivant
             </Button>

@@ -45,7 +45,7 @@ export default function View() {
     try {
       await ViewCalendar(view);
       toast.success("Votre visibilité a été enregistrée");
-      router.push("/authentifier/create/time");
+      router.push("/create/time");
       setLoading(false);
     } catch (e) {
       toast.error(e.message);

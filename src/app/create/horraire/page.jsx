@@ -103,7 +103,7 @@ export default function Horraires() {
               >
                 Modifier vos horaires
               </Button>
-              <Link href={"/authentifier/create/vueCalendar"}>
+              <Link href={"/create/vueCalendar"}>
                 <Button className={"w-[400px] h-[30px] rounded-md mt-5"}>
                   Suivant
                 </Button>
