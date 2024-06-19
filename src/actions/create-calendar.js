@@ -36,6 +36,7 @@ export const infoDaysCalendar = async (date) => {
       await db.collection("reservation").insertOne({
         userEmail: session.user.email,
         days: date,
+        idUser: session.user.id,
       });
     }
   } catch (e) {

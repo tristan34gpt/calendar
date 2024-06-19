@@ -80,7 +80,7 @@ export default function Date() {
       </h1>
       <form onSubmit={createDate}>
         <div className="flex flex-col justify-center items-center text-[1.3em]">
-          {session.user.reservations.length > 0 ? (
+          {session &&
             week.map((day, index) => (
               <div key={index} className="flex mt-5">
                 <div className="bg-gradiant-color w-[400px] h-[40px] text-center rounded-md flex justify-center items-center text-white">
@@ -98,10 +98,7 @@ export default function Date() {
                   {dates.includes(day) ? "✓" : "+"}
                 </button>
               </div>
-            ))
-          ) : (
-            <p>Pas de sessions</p>
-          )}
+            ))}
         </div>
         {!loading ? (
           <Button

@@ -1,33 +1,38 @@
 import { MongoClient } from "mongodb";
-import { getSession } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
 
-const handler = async (req, res) => {
-  if (req.method !== "GET") {
-    return res.status(405).end(); // Method Not Allowed
+export async function GET(request) {
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
+  if (!token) {
+    return NextResponse.json(
+      { error: "User is not authenticated" },
+      { status: 401 }
+    );
   }
 
-  const session = await getSession({ req });
-
-  if (!session) {
-    return res.status(401).json({ error: "User is not authenticated" });
-  }
-
-  const userEmail = session.user.email;
+  const idUser = token.id;
 
   try {
-    const client = await MongoClient.connect(process.env.MONGODB_CLIENT);
+    const client = new MongoClient(process.env.MONGODB_CLIENT);
+    await client.connect();
     const db = client.db(process.env.MONGODB_DATABASE);
     const reservations = await db
       .collection("reservation")
-      .find({ userEmail })
+      .find({ idUser: idUser })
       .toArray();
 
-    client.close();
+    await client.close();
 
-    return res.status(200).json(reservations);
+    return NextResponse.json(reservations, { status: 200 });
   } catch (e) {
-    return res.status(500).json({ error: "Unable to fetch reservations" });
+    return NextResponse.json(
+      { error: "Unable to fetch reservations" },
+      { status: 500 }
+    );
   }
-};
-
-export default handler;
+}
