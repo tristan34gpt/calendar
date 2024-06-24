@@ -33,32 +33,34 @@ export default function Signin() {
     // If a field is empty
     if (!firstname || !lastname || !email || !password || !passwordTwoo) {
       // Notification
-      return toast.error("Aucun champ ne doit être vide !");
       setLoading(false);
+      return toast.error("Aucun champ ne doit être vide !");
     }
 
     // If identical passwords
     if (password !== passwordTwoo) {
-      return toast.error("Vos mots de passe ne sont pas identiques");
       setLoading(false);
+      return toast.error("Vos mots de passe ne sont pas identiques");
     }
 
     if (!checkEmail(email)) {
       // Check if the email is valid
+      setLoading(false);
       return toast.error("Veuillez entrer un email valide");
     }
 
     try {
       // Success
       await createUser(firstname, lastname, email, password);
-      toast.success("Votre compte a bien été créé !");
-      // Redirect
-      router.push("/auth/connexion");
+
       setLoading(false);
     } catch (error) {
       toast.error(error.message);
       setLoading(false);
     }
+
+    router.push("/auth/connexion");
+    setLoading(false);
   };
 
   return (

@@ -4,56 +4,53 @@ import { MongoClient } from "mongodb";
 import bcrypt from "bcrypt";
 import { checkEmail } from "@/utils/check-emailsyntax";
 
-let cachedClient = null;
-let cachedDb = null;
-
-// Function to connect to MongoDB
-async function connectToDatabase(uri) {
-  if (cachedClient && cachedDb) {
-    return { client: cachedClient, db: cachedDb };
-  }
-
-  const client = await MongoClient.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+export const createUser = async (firstname, lastname, email, password) => {
+  console.log("createUser called with:", {
+    firstname,
+    lastname,
+    email,
+    password,
   });
 
-  const db = client.db(process.env.MONGODB_DATABASE);
-  cachedClient = client;
-  cachedDb = db;
-
-  return { client, db };
-}
-
-export const createUser = async (firstname, lastname, email, password) => {
   // If a field is empty
   if (!firstname || !lastname || !email || !password) {
+    // Notification
+    console.error("Validation failed: missing fields");
     throw new Error("Aucun champ ne doit être vide !");
   }
 
   // Check if the email is valid
   if (!checkEmail(email)) {
+    console.error("Validation failed: invalid email");
     throw new Error("Veuillez entrer un email valide !");
   }
 
-  const { db, client } = await connectToDatabase(process.env.MONGODB_CLIENT);
+  // Connect to the MongoDB cluster
+  const client = await MongoClient.connect(process.env.MONGODB_CLIENT);
+
+  // Connect to the MongoDB database
+  const db = client.db(process.env.MONGODB_DATABASE);
 
   try {
-    // Verify if this email is already used
-    const user = await db.collection("users").findOne({ email });
-
-    if (user) {
+    // First: Verify if this email is already used
+    // Select the "users" collection
+    console.log("Checking if email is already used...");
+    let user = await db.collection("users").find({ email }).limit(1).toArray();
+    // If the email is already used
+    if (user.length !== 0) {
+      await client.close();
+      console.error("Email already used:", email);
       throw new Error("Cet email est déjà utilisé");
     }
 
-    // Encrypt the password
+    // Third: Encrypt the password
     const encryptedPassword = await bcrypt.hash(password, 10);
 
-    // Create the user
+    // Fourth: Create the user
     await db.collection("users").insertOne({
-      firstname,
-      lastname,
-      email,
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
       password: encryptedPassword,
       creation: new Date(),
     });
@@ -61,8 +58,9 @@ export const createUser = async (firstname, lastname, email, password) => {
     console.log("User created successfully:", email);
   } catch (e) {
     console.error("Error creating user:", e);
-    throw new Error(e.message);
-  } finally {
     await client.close();
+    throw new Error(e);
   }
+
+  await client.close();
 };
