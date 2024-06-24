@@ -1,10 +1,10 @@
+"use server";
+
+import { MongoClient } from "mongodb";
 import bcrypt from "bcrypt";
 import { checkEmail } from "@/utils/check-emailsyntax";
-import { connectToDatabase } from "../../lib/mongodb";
 
 export const createUser = async (firstname, lastname, email, password) => {
-  console.time("createUser");
-
   console.log("createUser called with:", {
     firstname,
     lastname,
@@ -12,38 +12,42 @@ export const createUser = async (firstname, lastname, email, password) => {
     password,
   });
 
+  console.time("createUser");
+
   // Log: début de la validation des champs
   console.time("validateFields");
   if (!firstname || !lastname || !email || !password) {
     console.error("Validation failed: missing fields");
     console.timeEnd("validateFields");
+    console.timeEnd("createUser");
     throw new Error("Aucun champ ne doit être vide !");
   }
 
   if (!checkEmail(email)) {
     console.error("Validation failed: invalid email");
     console.timeEnd("validateFields");
+    console.timeEnd("createUser");
     throw new Error("Veuillez entrer un email valide !");
   }
   console.timeEnd("validateFields");
 
   // Log: début de la connexion à MongoDB
   console.time("connectToDatabase");
-  const { client, db } = await connectToDatabase(
-    process.env.MONGODB_CLIENT,
-    process.env.MONGODB_DATABASE
-  );
+  const client = await MongoClient.connect(process.env.MONGODB_CLIENT);
+  const db = client.db(process.env.MONGODB_DATABASE);
   console.timeEnd("connectToDatabase");
 
   try {
     // Log: vérification de l'existence de l'utilisateur
     console.time("checkUserExistence");
     console.log("Checking if email is already used...");
-    let user = await db.collection("users").findOne({ email });
+    let user = await db.collection("users").find({ email }).limit(1).toArray();
     console.timeEnd("checkUserExistence");
 
-    if (user) {
+    if (user.length !== 0) {
+      await client.close();
       console.error("Email already used:", email);
+      console.timeEnd("createUser");
       throw new Error("Cet email est déjà utilisé");
     }
 
@@ -66,13 +70,15 @@ export const createUser = async (firstname, lastname, email, password) => {
     console.log("User created successfully:", email);
   } catch (e) {
     console.error("Error creating user:", e);
-    throw new Error(e);
-  } finally {
-    // Log: fermeture de la connexion MongoDB
-    console.time("closeConnection");
     await client.close();
-    console.timeEnd("closeConnection");
+    console.timeEnd("createUser");
+    throw new Error(e);
   }
+
+  // Log: fermeture de la connexion MongoDB
+  console.time("closeConnection");
+  await client.close();
+  console.timeEnd("closeConnection");
 
   console.timeEnd("createUser");
 };
