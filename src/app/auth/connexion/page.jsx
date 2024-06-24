@@ -52,8 +52,8 @@ export default function Login() {
         return toast.error(response.error);
       }
     } catch (e) {
-      return toast.error(e.message);
       setLoading(false);
+      return toast.error(e.message);
     }
 
     // Success
