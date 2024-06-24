@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/auth/inscription": {
+    "action/uptdate-profil.js": {
       "maxDuration": 30
     }
   },
