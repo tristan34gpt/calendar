@@ -1,8 +1,8 @@
 {
   "functions": {
     "api/auth/inscription": {
-      "maxDuration": 30,
-      "regions": ["cdg1"]
+      "maxDuration": 30
     }
-  }
+  },
+  "regions": ["cdg1"]
 }
