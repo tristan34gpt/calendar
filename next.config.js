@@ -10,7 +10,7 @@ module.exports = (env) => {
         MONGODB_DATABASE: "calendar",
         NEXTAUTH_SECRET:
           "lijhdfosdfhgdrgjpregoqjszedezfzegfgjqzero*gjierqphqpirhegirphehg",
-        NEXTAUTH_URL: "http://localhost:3000/",
+        NEXTAUTH_URL: "http://localhost:3000",
       },
     };
   } else {
@@ -22,7 +22,7 @@ module.exports = (env) => {
         MONGODB_DATABASE: "calendar",
         NEXTAUTH_SECRET:
           "lijhdfosdfhgdrgjpregoqjszedezfzegfgjqzero*gjierqphqpirhegirphehg",
-        NEXTAUTH_URL: "https://calendar-weld.vercel.app/",
+        NEXTAUTH_URL: "https://calendar-weld.vercel.app",
       },
     };
   }
