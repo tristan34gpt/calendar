@@ -52,7 +52,6 @@ export const createUser = async (firstname, lastname, email, password) => {
     // FOURTH: Create the user
     await db.collection("users").insertOne({
       username,
-      pseudo,
       email,
       password: encryptedPassword,
       creation: new Date(),
