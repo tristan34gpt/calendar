@@ -32,7 +32,8 @@ export default function Question() {
 
   const questionsRef = useRef(null);
   console.log(questions);
-  //Function
+
+  // Function
   const addQuestions = (e) => {
     setModale(false);
     const newQuestion = questionsRef.current.value;
@@ -51,7 +52,7 @@ export default function Question() {
     setLoading(true);
     try {
       await questionsCalendar(questions);
-      toast.success("Enregistrez");
+      toast.success("Enregistré");
       router.push("/agenda");
       setLoading(false);
     } catch (e) {
@@ -100,7 +101,7 @@ export default function Question() {
                 type="submit"
                 className="mt-5 text-[1.2em] hover:text-red-900 hover:font-extrabold transition-all"
               >
-                Enregistrez
+                Enregistrer
               </button>
             </form>
           </div>

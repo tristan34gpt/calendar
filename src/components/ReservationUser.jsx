@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 export default function ReservationUser({ date, questions }) {
   const [confirmation, setConfirmation] = useState(false);
 
+  // Function to handle the form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -39,13 +40,13 @@ export default function ReservationUser({ date, questions }) {
   };
 
   return (
-    <div className="w-full min-w-[600px]  text-white text-center">
+    <div className="w-full min-w-[600px] text-white text-center">
       <h2 className="mb-5">
         Réserver le créneau :{" "}
-        <span className="font-bold text-black">{date}</span>{" "}
+        <span className="font-bold text-black">{date}</span>
       </h2>
       <form
-        className=" flex flex-col justify-center items-center"
+        className="flex flex-col justify-center items-center"
         onSubmit={handleSubmit}
       >
         {questions && questions.length > 0 && (
@@ -70,7 +71,7 @@ export default function ReservationUser({ date, questions }) {
               className="mb-5 rounded-md p-2 w-[300px] text-black"
             />
             <button className="font-bold text-[1.1em]" type="submit">
-              Validez
+              Valider
             </button>
           </>
         )}

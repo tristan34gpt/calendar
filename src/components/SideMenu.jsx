@@ -27,18 +27,19 @@ export function SideMenu() {
     }
   }, [reservation]);
 
+  // Function to verify the calendar status
   const verifyCalendar = () => {
     if (reservation && reservation.length < 1) {
-      return "+ créez";
+      return "+ créer";
     } else if (
       (reservation && reservation.length > 1 && reserv.date) ||
       !reserv.schedule ||
       !reserv.time ||
       !reserv.questions
     ) {
-      return "Finir sont Calendar";
+      return "Finir son calendrier";
     } else {
-      return "Modifier votre Calendar";
+      return "Modifier votre calendrier";
     }
   };
 
@@ -66,7 +67,7 @@ export function SideMenu() {
       <div
         className={`${
           menuOpen ? "block" : "hidden"
-        } md:block p-5 border-gradient-color h-[100vh] flex flex-col md:flex-col`}
+        } md:block p-5 border-gradiant-color h-[100vh] flex flex-col md:flex-col`}
       >
         {user ? (
           <>

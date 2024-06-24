@@ -59,7 +59,7 @@ export default function Date() {
     }
     try {
       await infoDaysCalendar(dates);
-      toast.success("Enregistrez");
+      toast.success("Enregistré");
       router.push("/create/horraire");
       setLoading(false);
     } catch (e) {
@@ -112,7 +112,6 @@ export default function Date() {
           </Button>
         ) : (
           <div className="flex justify-center items-center mt-[40px]">
-            {" "}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1.2em"

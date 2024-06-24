@@ -7,18 +7,18 @@ import { getServerSession } from "next-auth";
 
 export const updateUser = async (firstname, lastname, email) => {
   if (!firstname || !lastname || !email) {
-    console.log("Champ manquant");
-    throw new Error("Aucun champ ne doit être vide !");
+    console.log("Missing field");
+    throw new Error("No field should be empty!");
   }
 
   if (!checkEmail(email)) {
-    throw new Error("Veuillez entrer un email valide");
+    throw new Error("Please enter a valid email");
   }
 
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    throw new Error("Utilisateur non authentifié");
+    throw new Error("User not authenticated");
   }
 
   const client = new MongoClient(process.env.MONGODB_CLIENT);
@@ -31,7 +31,7 @@ export const updateUser = async (firstname, lastname, email) => {
       .findOne({ email: session.user.email });
 
     if (!existingUser) {
-      throw new Error("Utilisateur non trouvé");
+      throw new Error("User not found");
     }
 
     let updateFields = {};
@@ -49,8 +49,8 @@ export const updateUser = async (firstname, lastname, email) => {
         emailUsed &&
         emailUsed._id.toString() !== existingUser._id.toString()
       ) {
-        console.log(`Email déjà utilisé par un autre utilisateur: ${email}`);
-        throw new Error("Cet email est déjà utilisé");
+        console.log(`Email already used by another user: ${email}`);
+        throw new Error("This email is already used");
       }
       updateFields.email = email;
     }
@@ -63,14 +63,14 @@ export const updateUser = async (firstname, lastname, email) => {
           { $set: updateFields },
           { upsert: true }
         );
-      console.log("Profil mis à jour avec succès", result);
+      console.log("Profile updated successfully", result);
       return result;
     } else {
-      console.log("Aucune mise à jour nécessaire");
-      return { message: "Aucune mise à jour nécessaire" };
+      console.log("No update necessary");
+      return { message: "No update necessary" };
     }
   } catch (e) {
-    console.error("Erreur lors de la mise à jour du profil:", e.message);
+    console.error("Error updating profile:", e.message);
     throw new Error(e.message);
   } finally {
     await client.close();

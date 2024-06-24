@@ -7,18 +7,17 @@ import Button from "@/components/Button";
 import Loading from "@/components/Loading";
 
 export default function Profil() {
-  //Context
+  // Context
   const { user, fetchUser, status } = useUser();
 
-  //Variable
-
+  // Variables
   const [modalEditProfil, setModalEditProfil] = useState(false);
   const [loading, setLoading] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
 
-  //Cycle
+  // Cycle
   useEffect(() => {
     if (user) {
       setFirstName(user.firstname);
@@ -27,8 +26,7 @@ export default function Profil() {
     }
   }, [user]);
 
-  //Function
-
+  // Function
   const updateProfile = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -58,7 +56,7 @@ export default function Profil() {
         return toast.error(errorData);
       }
       await fetchUser();
-      toast.success("Profil mis a jour");
+      toast.success("Profil mis à jour");
       setModalEditProfil(false);
       setLoading(false);
     } catch (e) {
@@ -67,14 +65,14 @@ export default function Profil() {
     }
   };
 
-  //Loading session
+  // Loading session
   if (status === "loading" || !user) {
     return <Loading />;
   }
 
   return (
     <div className="mt-[100px] flex flex-col justify-center text-center w-full h-full relative">
-      {/* Info user */}
+      {/* User info */}
       <h1 className="text-[1.3em] font-semibold">Profil</h1>
       <div className="text-[1.1em] mt-[30px]">
         <h3>
@@ -94,11 +92,10 @@ export default function Profil() {
           }}
           className={"w-[400px] h-[40px] rounded-md mt-[100px]"}
         >
-          Modifiez le profil
+          Modifier le profil
         </Button>
 
         {/* Form update profil */}
-
         {modalEditProfil && (
           <div className="mt-2 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center bg-gradiant-color w-[600px] h-[500px] text-white text-center rounded-md">
             <button
@@ -124,7 +121,7 @@ export default function Profil() {
                 required
               />
               <input
-                className="mt-5 w-[300px] h-[35px] p-5 rounded-md focus:outline-none text-black gradient-transparent"
+                className="mt-5 w-[300px] h-[35px] p-5 rounded-md focus:outline-none text-black bg-gradiant-transparent"
                 type="text"
                 placeholder="Nom"
                 value={lastName}
@@ -132,7 +129,7 @@ export default function Profil() {
                 required
               />
               <input
-                className="mt-5 w-[300px] h-[35px] p-5 rounded-md focus:outline-none text-black"
+                className="mt-5 w-[300px] h-[35px] p-5 rounded-md focus:outline-none text-black bg-gradiant-transparent"
                 type="email"
                 placeholder="Adresse email"
                 value={email}
@@ -167,7 +164,7 @@ export default function Profil() {
                   type="submit"
                   className="mt-5 text-[1.2em] hover:text-red-900 hover:font-extrabold transition-all"
                 >
-                  Enregistrez
+                  Enregistrer
                 </button>
               )}
             </form>

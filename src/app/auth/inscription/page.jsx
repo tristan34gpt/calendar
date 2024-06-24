@@ -1,4 +1,5 @@
 "use client";
+
 // Components
 import Button from "@/components/Button";
 import Input from "@/components/Input";
@@ -12,10 +13,10 @@ import Link from "next/link";
 import { createUser } from "@/actions/uptdate-profil";
 
 export default function Signin() {
-  //Variable
+  // Variable
   const router = useRouter();
 
-  //Function
+  // Function
   const handleCreateUser = async (e) => {
     e.preventDefault();
 
@@ -28,23 +29,21 @@ export default function Signin() {
 
     // If a field is empty
     if (!firstname || !lastname || !email || !password || !passwordTwoo) {
-      //Notification
+      // Notification
       return toast.error("Aucun champ ne doit être vide !");
     }
 
     // If identical passwords
     if (password !== passwordTwoo) {
-      return toast.error("Vos mot de passes ne sont pas identiques");
+      return toast.error("Vos mots de passe ne sont pas identiques");
     }
 
     if (!checkEmail(email)) {
-      //Check if the email is valide
+      // Check if the email is valid
       return toast.error("Veuillez entrer un email valide");
     }
 
     try {
-      // Remplacez cette ligne par la fonction réelle de création d'utilisateur
-      // await createUser(firstname, lastname, email, password);
       // Success
       await createUser(firstname, lastname, email, password);
       toast.success("Votre compte a bien été créé !");
@@ -119,11 +118,11 @@ export default function Signin() {
 
         <div className="flex flex-col bg-gradiant-color w-full h-[full] rounded-[5px]">
           <p className="text-center font-semibold text-white mt-[10%] text-[1.3em]">
-            <span className="text-black">Créer</span> votre système de
+            <span className="text-black">Créez</span> votre système de
             réservation et partagez-le
           </p>
           <p className="text-center font-semibold text-white text-[1.1em] mt-[2%]">
-            Facile simple et{" "}
+            Facile, simple et{" "}
             <span className="text-black font-bold text-[1.2em]">
               100% Gratuit
             </span>

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 export default function Apercu() {
-  const { id } = useParams(); // Récupérer l'ID de l'URL
+  const { id } = useParams(); // Retrieve the ID from the URL
   const {
     user,
     reservation,
@@ -14,7 +14,7 @@ export default function Apercu() {
     fetchUserById,
     fetchReservationById,
     fetchReservationUserById,
-  } = useUser(); // Récupération des données utilisateur et des réservations
+  } = useUser(); // Retrieve user data and reservations
   const [days, setDays] = useState([]);
   const [modal, setModal] = useState(false);
   const [selectedDateTime, setSelectedDateTime] = useState(null);
@@ -34,23 +34,23 @@ export default function Apercu() {
   }, [reservation]);
 
   if (reservation.length === 0 || !reservation[0].schedule) {
-    return <div>Loading...</div>; // ou un autre message d'attente approprié
+    return <div>Loading...</div>; // or another appropriate loading message
   }
 
-  // Fonction pour convertir une chaîne de caractères "HH:MM" en minutes
+  // Function to convert a "HH:MM" string to minutes
   const timeToMinutes = (time) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours * 60 + minutes;
   };
 
-  // Fonction pour convertir les minutes en chaîne de caractères "HH:MM"
+  // Function to convert minutes to a "HH:MM" string
   const minutesToTime = (minutes) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
   };
 
-  // Fonction pour générer les plages horaires
+  // Function to generate time slots
   const generateTimeSlots = (start, end, interval) => {
     const startMinutes = timeToMinutes(start);
     const endMinutes = timeToMinutes(end);
@@ -67,7 +67,7 @@ export default function Apercu() {
     return timeSlots;
   };
 
-  // Fonction pour formater les jours en anglais
+  // Function to format days in English
   const formatDay = (day) => {
     const daysOfWeek = {
       Lundi: "Mon",
@@ -81,7 +81,7 @@ export default function Apercu() {
     return daysOfWeek[day] || day;
   };
 
-  // Fonction pour vérifier si un horaire est pris
+  // Function to check if a time slot is taken
   const isTimeSlotTaken = (day, time) => {
     const formattedDay = formatDay(day);
     return reservationUser.some((reservation) => {

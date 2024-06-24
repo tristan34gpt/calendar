@@ -32,7 +32,7 @@ export default function Time() {
     }
   }, [status, session]);
 
-  //Function
+  // Function
 
   const createTime = async (e) => {
     e.preventDefault();
@@ -44,7 +44,7 @@ export default function Time() {
 
     try {
       await timeCalendar(time);
-      toast.success("Durée de l'appel enregistrez");
+      toast.success("Durée de l'appel enregistrée");
       router.push("/create/questions");
       setLoading(false);
     } catch (e) {
@@ -59,7 +59,7 @@ export default function Time() {
       {myTime && (
         <div className="flex flex-col justify-center items-center">
           <p>
-            Durré de l'appel <span className="font-semibold">{myTime} h</span>
+            Durée de l'appel <span className="font-semibold">{myTime} h</span>
           </p>
 
           <Button
@@ -69,8 +69,8 @@ export default function Time() {
             }}
           >
             {modify
-              ? " Anuler les modification"
-              : " Modifer la durée de l'appel"}
+              ? " Annuler les modifications"
+              : " Modifier la durée de l'appel"}
           </Button>
           <Link href={"/create/questions"}>
             <Button className={"w-[300px] rounded-md h-[30px] mt-5 mb-5"}>

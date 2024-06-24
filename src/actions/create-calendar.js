@@ -8,11 +8,11 @@ const Verify = async () => {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    throw new Error("Vous n'êtes pas connecté");
+    throw new Error("You are not logged in");
   }
 };
 
-//Days calendar
+// Days calendar
 
 export const infoDaysCalendar = async (date) => {
   const session = await getServerSession(authOptions);
@@ -27,12 +27,12 @@ export const infoDaysCalendar = async (date) => {
       .findOne({ userEmail: session.user.email });
 
     if (existingReservation) {
-      // if reseservation existing update bdd
+      // If reservation exists, update database
       await db
         .collection("reservation")
         .updateOne({ userEmail: session.user.email }, { $set: { days: date } });
     } else {
-      // if reservation not existing so news collection
+      // If reservation does not exist, create new collection
       await db.collection("reservation").insertOne({
         userEmail: session.user.email,
         days: date,
@@ -46,7 +46,7 @@ export const infoDaysCalendar = async (date) => {
   await client.close();
 };
 
-//Schedule calendar
+// Schedule calendar
 
 export const scheduleCalendar = async (schedule) => {
   await Verify();
@@ -58,7 +58,7 @@ export const scheduleCalendar = async (schedule) => {
       .collection("reservation")
       .findOne({ userEmail: session.user.email });
 
-    // THIRD: Add info day in calendar
+    // Add schedule info to calendar
     const result = await db
       .collection("reservation")
       .updateOne(
@@ -72,7 +72,7 @@ export const scheduleCalendar = async (schedule) => {
   await client.close();
 };
 
-//View calendar
+// View calendar
 
 export const ViewCalendar = async (view) => {
   await Verify();
@@ -84,7 +84,7 @@ export const ViewCalendar = async (view) => {
       .collection("reservation")
       .findOne({ userEmail: session.user.email });
 
-    // THIRD: Add info day in calendar
+    // Add view info to calendar
     const result = await db
       .collection("reservation")
       .updateOne(
@@ -97,7 +97,7 @@ export const ViewCalendar = async (view) => {
   }
 };
 
-//Time calendar
+// Time calendar
 
 export const timeCalendar = async (time) => {
   await Verify();
@@ -109,7 +109,7 @@ export const timeCalendar = async (time) => {
       .collection("reservation")
       .findOne({ userEmail: session.user.email });
 
-    // THIRD: Add info day in calendar
+    // Add time info to calendar
     const result = await db
       .collection("reservation")
       .updateOne(
@@ -122,7 +122,7 @@ export const timeCalendar = async (time) => {
   }
 };
 
-//Questions calendar
+// Questions calendar
 
 export const questionsCalendar = async (questions) => {
   await Verify();
@@ -134,7 +134,7 @@ export const questionsCalendar = async (questions) => {
       .collection("reservation")
       .findOne({ userEmail: session.user.email });
 
-    // THIRD: Add info day in calendar
+    // Add questions info to calendar
     const result = await db
       .collection("reservation")
       .updateOne(
@@ -151,25 +151,25 @@ export const createCalendar = async (date) => {
   const infoCalendar = [date];
   const userEmail = await Verify();
 
-  //connect to the MongoDB cluster
+  // Connect to the MongoDB cluster
 
   const client = await MongoClient.connect(process.env.MONGODB_CLIENT);
 
-  //connect to the MongoDB database
+  // Connect to the MongoDB database
 
   const db = client.db(process.env.MONGODB_DATABASE);
 
   try {
-    // Vérification si l'utilisateur a déjà une réservation
+    // Check if the user already has a reservation
     const existingReservation = await db
       .collection("reservation")
       .findOne({ userEmail: userEmail });
 
     if (existingReservation) {
-      throw new Error("Vous avez déjà une réservation.");
+      throw new Error("You already have a reservation.");
     }
 
-    // THIRD: Create the calendar
+    // Create the calendar
     const result = await db.collection("reservation").insertOne({
       userEmail: userEmail,
       days: date,

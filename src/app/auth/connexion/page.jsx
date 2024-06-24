@@ -5,7 +5,7 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Logo from "@/components/Logo";
 
-// library
+// Library
 import { checkEmail } from "@/utils/check-emailsyntax";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -13,27 +13,27 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 
 export default function Login() {
-  //variable
+  // Variable
   const router = useRouter();
 
-  //Function
+  // Function
   const signinUser = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const email = formData.get("email");
     const password = formData.get("password");
 
-    //If a field is empty
+    // If a field is empty
     if (!email || !password) {
       return toast.error("Veuillez remplir tous les champs");
     }
 
-    //check if the email is valid
+    // Check if the email is valid
     if (!checkEmail(email)) {
       return toast.error("Veuillez entrer un email valide");
     }
 
-    //Signin the use
+    // Signin the user
     try {
       const response = await signIn("credentials", {
         email,
@@ -48,12 +48,11 @@ export default function Login() {
       return toast.error(e.message);
     }
 
-    //succes
-
+    // Success
     toast.success("Vous êtes connecté");
     router.replace("/");
 
-    //Redirect
+    // Redirect
   };
   return (
     <div className="flex flex-col justify-center items-center">
@@ -62,7 +61,7 @@ export default function Login() {
       </h1>
       <div className="form-login">
         {/* Form */}
-        <div className="flex flex-col w-full  items-center">
+        <div className="flex flex-col w-full items-center">
           {/* Logo */}
           <Logo className={"mt-[50px]"} />
           <form
@@ -71,7 +70,7 @@ export default function Login() {
           >
             <Input
               type={"email"}
-              placeholder={"adresse email"}
+              placeholder={"Adresse email"}
               classname={"mt-[50px] w-[70%] h-[40px] "}
               name={"email"}
             />
@@ -101,15 +100,14 @@ export default function Login() {
           </p>
         </div>
 
-        {/*  */}
         <div className="flex flex-col bg-gradiant-color w-full h-[500px] rounded-[5px]">
           <p className="text-center font-semibold text-white mt-[10%] text-[1.3em]">
-            <span className="text-black">Créer</span> votre système de
+            <span className="text-black">Créez</span> votre système de
             réservation et partagez-le
           </p>
           <p className="text-center font-semibold text-white text-[1.1em] mt-[2%]">
-            Facile simple et{" "}
-            <span className="text-black  font-bold text-[1.2em]">
+            Facile, simple et{" "}
+            <span className="text-black font-bold text-[1.2em]">
               100% Gratuit
             </span>
           </p>

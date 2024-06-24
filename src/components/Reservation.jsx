@@ -41,7 +41,7 @@ export function Reservation({
 
             {/* Modal content */}
             <div className="fixed inset-0 flex items-center justify-center z-50">
-              <div className="bg-gradiant-color w-[600px]  text-white text-center rounded-md p-5 relative">
+              <div className="bg-gradiant-color w-[600px] text-white text-center rounded-md p-5 relative">
                 <button
                   onClick={handleCloseModal}
                   className="absolute top-5 right-5 text-[1em] font-medium w-[40px] h-[40px] text-center flex justify-center items-center hover:text-[1.2em] transition-all hover:text-red-900"

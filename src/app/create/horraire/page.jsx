@@ -17,8 +17,8 @@ export default function Horraires() {
   const startPauseTime = useRef(null);
   const endPauseTime = useRef(null);
 
-  const [schedule, setShedule] = useState([]);
-  const [mySchedule, setMyShedule] = useState([]);
+  const [schedule, setSchedule] = useState([]);
+  const [mySchedule, setMySchedule] = useState([]);
   const [modify, setModify] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -32,15 +32,15 @@ export default function Horraires() {
           if (reserv.schedule && typeof reserv.schedule === "object") {
             schedules.push(reserv.schedule);
           }
-          setMyShedule(schedules);
+          setMySchedule(schedules);
         }
       }
     }
   }, [status, session]);
 
-  //Function
+  // Function
 
-  const createShedule = async (e) => {
+  const createSchedule = async (e) => {
     e.preventDefault();
     setLoading(true);
     if (!startTime.current.value || !endTime.current.value) {
@@ -53,7 +53,7 @@ export default function Horraires() {
       endTime: endTime.current.value,
     };
 
-    setShedule([newSchedule]);
+    setSchedule([newSchedule]);
 
     try {
       await scheduleCalendar(newSchedule);
@@ -69,7 +69,7 @@ export default function Horraires() {
 
   return (
     <div className="flex flex-col justify-center items-center w-full">
-      {/* Afficher les horaires enregistrés */}
+      {/* Display saved schedules */}
       {mySchedule.length > 0 && !modify && (
         <div>
           <h2 className="text-[1.2em] text-center font-semibold">
@@ -111,7 +111,7 @@ export default function Horraires() {
           <h1 className="text-center text-[1.3em] font-semibold mb-[70px]">
             Renseignez vos horaires
           </h1>
-          <form onSubmit={createShedule}>
+          <form onSubmit={createSchedule}>
             <div className="text-center">
               <p className="text-[1.2em]">Heure de début</p>
               <input
