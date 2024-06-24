@@ -52,13 +52,12 @@ export default function Signin() {
     try {
       // Success
       await createUser(firstname, lastname, email, password);
-
-      setLoading(false);
     } catch (error) {
       toast.error(error.message);
       setLoading(false);
     }
-
+    toast.success("Votre compte a bien été créé !");
+    // Redirect
     router.push("/auth/connexion");
     setLoading(false);
   };
