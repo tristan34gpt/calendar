@@ -7,17 +7,12 @@ import { checkEmail } from "@/utils/check-emailsyntax";
 let cachedClient = null;
 let cachedDb = null;
 
-// Function to connect to MongoDB
 async function connectToDatabase(uri) {
   if (cachedClient && cachedDb) {
     return { client: cachedClient, db: cachedDb };
   }
 
-  const client = await MongoClient.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-
+  const client = await MongoClient.connect(uri);
   const db = client.db(process.env.MONGODB_DATABASE);
   cachedClient = client;
   cachedDb = db;
@@ -26,30 +21,36 @@ async function connectToDatabase(uri) {
 }
 
 export const createUser = async (firstname, lastname, email, password) => {
-  // If a field is empty
+  console.log("createUser called with:", {
+    firstname,
+    lastname,
+    email,
+    password,
+  });
+
   if (!firstname || !lastname || !email || !password) {
+    console.error("Validation failed: missing fields");
     throw new Error("Aucun champ ne doit être vide !");
   }
 
-  // Check if the email is valid
   if (!checkEmail(email)) {
+    console.error("Validation failed: invalid email");
     throw new Error("Veuillez entrer un email valide !");
   }
 
   const { db, client } = await connectToDatabase(process.env.MONGODB_CLIENT);
 
   try {
-    // Verify if this email is already used
+    console.log("Checking if email is already used...");
     const user = await db.collection("users").findOne({ email });
 
     if (user) {
+      console.error("Email already used:", email);
       throw new Error("Cet email est déjà utilisé");
     }
 
-    // Encrypt the password
     const encryptedPassword = await bcrypt.hash(password, 10);
 
-    // Create the user
     await db.collection("users").insertOne({
       firstname,
       lastname,
@@ -62,7 +63,5 @@ export const createUser = async (firstname, lastname, email, password) => {
   } catch (e) {
     console.error("Error creating user:", e);
     throw new Error(e.message);
-  } finally {
-    await client.close();
   }
 };
