@@ -34,17 +34,6 @@ export const createUser = async (firstname, lastname, email, password) => {
       throw new Error("cet email est déja utilisé");
     }
 
-    // SECOND: Verify if this pseudo is already used
-    // Select the "users" collection
-    user = await db.collection("users").find({ pseudo }).limit(1).toArray();
-
-    //If the pseudo is already used
-    if (user.length !== 0) {
-      await client.close();
-
-      throw new Error("Ce pseudo est déja utilisé");
-    }
-
     // THIRD: Encrypt the password
 
     const encryptedPassword = await bcrypt.hash(password, 10);
