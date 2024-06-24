@@ -46,7 +46,6 @@ export default function Signin() {
     if (!checkEmail(email)) {
       // Check if the email is valid
       return toast.error("Veuillez entrer un email valide");
-      setLoading(false);
     }
 
     try {
