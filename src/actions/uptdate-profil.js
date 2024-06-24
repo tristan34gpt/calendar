@@ -1,6 +1,6 @@
-import { connectToDatabase } from "@/lib/mongodb";
 import bcrypt from "bcrypt";
 import { checkEmail } from "@/utils/check-emailsyntax";
+import { connectToDatabase } from "../../lib/mongodb";
 
 export const createUser = async (firstname, lastname, email, password) => {
   console.time("createUser");
