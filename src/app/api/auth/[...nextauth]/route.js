@@ -74,7 +74,7 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user._id; // Assurez-vous d'utiliser _id ici
+        token.id = user._id;
         token.firstname = user.firstname;
         token.lastname = user.lastname;
         token.email = user.email;
@@ -98,11 +98,11 @@ export const authOptions = {
 
         // Retrieve reservations for the user
         const reservations = await db
-          .collection("reservation") // Assurez-vous que le nom de la collection est correct
+          .collection("reservation")
           .find({ userEmail: session.user.email })
           .toArray();
 
-        session.user.reservations = reservations; // Ajouter les réservations à la session
+        session.user.reservations = reservations;
 
         await client.close();
       } catch (e) {

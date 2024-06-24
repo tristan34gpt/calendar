@@ -12,7 +12,6 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { createUser } from "@/actions/uptdate-profil";
 import { useState } from "react";
-import Loading from "@/components/Loading";
 
 export default function Signin() {
   // Variable
@@ -117,7 +116,7 @@ export default function Signin() {
                 Inscription
               </Button>
             ) : (
-              <Loading />
+              "Loading..."
             )}
           </form>
           <p className="mt-[30px] rounded-md">Avez-vous déjà un compte ?</p>
