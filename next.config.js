@@ -11,6 +11,7 @@ module.exports = (env) => {
         NEXTAUTH_SECRET:
           "lijhdfosdfhgdrgjpregoqjszedezfzegfgjqzero*gjierqphqpirhegirphehg",
       },
+      NEXTAUTH_URL: "http://localhost:3000/",
     };
   } else {
     return {
@@ -22,6 +23,7 @@ module.exports = (env) => {
         NEXTAUTH_SECRET:
           "lijhdfosdfhgdrgjpregoqjszedezfzegfgjqzero*gjierqphqpirhegirphehg",
       },
+      NEXTAUTH_URL: "https://calendar-weld.vercel.app/",
     };
   }
 };
