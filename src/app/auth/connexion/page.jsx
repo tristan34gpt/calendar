@@ -11,25 +11,31 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Login() {
+  const [loading, setLoading] = useState(false);
+
   // Variable
   const router = useRouter();
 
   // Function
   const signinUser = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const formData = new FormData(e.target);
     const email = formData.get("email");
     const password = formData.get("password");
 
     // If a field is empty
     if (!email || !password) {
+      setLoading(false);
       return toast.error("Veuillez remplir tous les champs");
     }
 
     // Check if the email is valid
     if (!checkEmail(email)) {
+      setLoading(false);
       return toast.error("Veuillez entrer un email valide");
     }
 
@@ -42,16 +48,18 @@ export default function Login() {
       });
 
       if (response.error) {
+        setLoading(false);
         return toast.error(response.error);
       }
     } catch (e) {
       return toast.error(e.message);
+      setLoading(false);
     }
 
     // Success
     toast.success("Vous êtes connecté");
     router.replace("/");
-
+    setLoading(false);
     // Redirect
   };
   return (
@@ -80,14 +88,18 @@ export default function Login() {
               classname={"mt-[50px] w-[70%] h-[40px]"}
               name={"password"}
             />
-            <Button
-              type="submit"
-              className={
-                "w-[50%] h-[40px] font-semibold rounded-md text-white text-[1.2em] mt-[50px]"
-              }
-            >
-              Connexion
-            </Button>
+            {!loading ? (
+              <Button
+                type="submit"
+                className={
+                  "w-[50%] h-[40px] font-semibold rounded-md text-white text-[1.2em] mt-[50px]"
+                }
+              >
+                Connexion
+              </Button>
+            ) : (
+              <div className="mt-[50px]">Loading...</div>
+            )}
           </form>
           <p className="mt-[50px] rounded-md">
             Vous n'avez pas encore de compte ?
