@@ -15,20 +15,18 @@ export default function Question() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (status === "authenticated" && session) {
-      if (reservation) {
-        const questions = [];
-        for (const reserv of reservation) {
-          if (reserv.questions.length > 0) {
-            for (const question of reserv.questions) {
-              questions.push(question);
-            }
+    if (reservation) {
+      const questionsArray = [];
+      for (const reserv of reservation) {
+        if (reserv.questions && reserv.questions.length > 0) {
+          for (const question of reserv.questions) {
+            questionsArray.push(question);
           }
         }
-        setQuestions(questions);
       }
+      setQuestions(questionsArray);
     }
-  }, [status, session]);
+  }, [reservation]);
 
   const router = useRouter();
 

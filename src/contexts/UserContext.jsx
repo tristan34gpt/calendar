@@ -1,5 +1,3 @@
-"use client";
-
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import { createContext, useState, useEffect, useContext } from "react";
@@ -10,11 +8,13 @@ export function UserProvider({ children }) {
   const { data: session, status } = useSession();
   const [user, setUser] = useState(null);
   const [reservation, setReservation] = useState(null);
+  const [reservationUser, setReservationUser] = useState(null);
 
   useEffect(() => {
     if (session) {
       fetchUser();
-      fetchReservation(); // Assurez-vous que les réservations sont récupérées lorsque la session est disponible
+      fetchReservation();
+      fetchReservationUser();
     }
   }, [session]);
 
@@ -59,6 +59,87 @@ export function UserProvider({ children }) {
     }
   };
 
+  const fetchReservationUser = async () => {
+    try {
+      const response = await fetch("/api/viewReservationUser", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch reservations");
+      }
+
+      const data = await response.json();
+      setReservationUser(data);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const fetchUserById = async (id) => {
+    try {
+      const response = await fetch("/api/fetchUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch user");
+      }
+
+      const data = await response.json();
+      setUser(data);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const fetchReservationById = async (id) => {
+    try {
+      const response = await fetch(`/api/reservation?id=${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch reservations");
+      }
+
+      const data = await response.json();
+      setReservation(data);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const fetchReservationUserById = async (id) => {
+    try {
+      const response = await fetch(`/api/viewReservationUser?id=${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch reservations");
+      }
+
+      const data = await response.json();
+      setReservationUser(data);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -68,6 +149,11 @@ export function UserProvider({ children }) {
         session,
         reservation,
         fetchReservation,
+        reservationUser,
+        fetchReservationUser,
+        fetchUserById,
+        fetchReservationById,
+        fetchReservationUserById,
       }}
     >
       {children}

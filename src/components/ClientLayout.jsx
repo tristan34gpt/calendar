@@ -5,7 +5,7 @@ import Loading from "@/components/Loading";
 import { UserProvider, useUser } from "@/contexts/UserContext";
 import { useSession } from "next-auth/react";
 import "react-toastify/dist/ReactToastify.css";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import DefaultLayout from "@/components/DefaultLayout";
 import AuthLayout from "@/components/AuthLayout";
 
@@ -13,6 +13,7 @@ function Content({ children }) {
   const { fetchUser, fetchReservation } = useUser();
   const { data: session, status } = useSession();
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const router = useRouter();
 
   const pathname = usePathname();
 
@@ -21,8 +22,8 @@ function Content({ children }) {
       if (session) {
         await fetchUser();
         await fetchReservation();
-        setIsDataLoaded(true);
       }
+      setIsDataLoaded(true);
     };
 
     fetchData();
@@ -32,8 +33,14 @@ function Content({ children }) {
     return <Loading />;
   }
 
+  if (!session && pathname !== "/auth/inscription") {
+    router.push("/auth/connexion");
+  }
+
   const isSpecialPage =
-    pathname === "/auth/connexion" || pathname === "/auth/inscription";
+    pathname === "/auth/connexion" ||
+    pathname === "/auth/inscription" ||
+    pathname.startsWith("/apercu/");
 
   return isSpecialPage ? (
     <AuthLayout>{children}</AuthLayout>
@@ -55,7 +62,6 @@ export default function ClientLayout({ children }) {
     </UserProvider>
   );
 }
-
 // "use client";
 
 // import { useEffect, useState } from "react";

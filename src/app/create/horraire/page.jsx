@@ -43,12 +43,7 @@ export default function Horraires() {
   const createShedule = async (e) => {
     e.preventDefault();
     setLoading(true);
-    if (
-      !startTime.current.value ||
-      !endTime.current.value ||
-      !startPauseTime.current.value ||
-      !endPauseTime.current.value
-    ) {
+    if (!startTime.current.value || !endTime.current.value) {
       setLoading(false);
       return toast.error("Vous devez renseigner vos horaires");
     }
@@ -56,8 +51,6 @@ export default function Horraires() {
     const newSchedule = {
       startTime: startTime.current.value,
       endTime: endTime.current.value,
-      startPauseTime: startPauseTime.current.value,
-      endPauseTime: endPauseTime.current.value,
     };
 
     setShedule([newSchedule]);
@@ -66,7 +59,7 @@ export default function Horraires() {
       await scheduleCalendar(newSchedule);
       toast.success("Vos horaires sont enregistrés");
       setModify(false);
-      router.push("/create/vueCalendar");
+      router.push("/create/time");
       setLoading(false);
     } catch (e) {
       toast.error(e.message);
@@ -103,7 +96,7 @@ export default function Horraires() {
               >
                 Modifier vos horaires
               </Button>
-              <Link href={"/create/vueCalendar"}>
+              <Link href={"/create/time"}>
                 <Button className={"w-[400px] h-[30px] rounded-md mt-5"}>
                   Suivant
                 </Button>
@@ -126,19 +119,7 @@ export default function Horraires() {
                 type="time"
                 ref={startTime}
               />
-              <div>
-                <p className="text-[1.2em] mt-5">Horaires indisponibles</p>
-                <input
-                  className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px]"
-                  type="time"
-                  ref={startPauseTime}
-                />
-                <input
-                  className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px] ml-5"
-                  type="time"
-                  ref={endPauseTime}
-                />
-              </div>
+              <div></div>
               <p className="text-[1.2em] mt-5">Heure de fin</p>
               <input
                 className="mt-5 border-[1px] p-2 rounded-md border-black w-[200px]"

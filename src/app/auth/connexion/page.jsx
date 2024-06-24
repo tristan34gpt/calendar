@@ -51,7 +51,7 @@ export default function Login() {
     //succes
 
     toast.success("Vous êtes connecté");
-    router.replace("/authentifier");
+    router.replace("/");
 
     //Redirect
   };
