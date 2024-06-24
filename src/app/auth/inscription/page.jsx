@@ -11,14 +11,18 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { createUser } from "@/actions/uptdate-profil";
+import { useState } from "react";
+import Loading from "@/components/Loading";
 
 export default function Signin() {
   // Variable
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
   // Function
   const handleCreateUser = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const formData = new FormData(e.target);
     const firstname = formData.get("firstname");
@@ -31,16 +35,19 @@ export default function Signin() {
     if (!firstname || !lastname || !email || !password || !passwordTwoo) {
       // Notification
       return toast.error("Aucun champ ne doit être vide !");
+      setLoading(false);
     }
 
     // If identical passwords
     if (password !== passwordTwoo) {
       return toast.error("Vos mots de passe ne sont pas identiques");
+      setLoading(false);
     }
 
     if (!checkEmail(email)) {
       // Check if the email is valid
       return toast.error("Veuillez entrer un email valide");
+      setLoading(false);
     }
 
     try {
@@ -49,8 +56,10 @@ export default function Signin() {
       toast.success("Votre compte a bien été créé !");
       // Redirect
       router.push("/auth/connexion");
+      setLoading(false);
     } catch (error) {
       toast.error(error.message);
+      setLoading(false);
     }
   };
 
@@ -98,14 +107,18 @@ export default function Signin() {
               classname={"mt-[30px] w-[70%] h-[40px]"}
               name={"passwordtwoo"}
             />
-            <Button
-              formButton
-              className={
-                "w-[50%] h-[40px] font-semibold rounded-md text-white text-[1.2em] mt-[30px]"
-              }
-            >
-              Inscription
-            </Button>
+            {!loading ? (
+              <Button
+                formButton
+                className={
+                  "w-[50%] h-[40px] font-semibold rounded-md text-white text-[1.2em] mt-[30px]"
+                }
+              >
+                Inscription
+              </Button>
+            ) : (
+              <Loading />
+            )}
           </form>
           <p className="mt-[30px] rounded-md">Avez-vous déjà un compte ?</p>
           <p className="mb-[15px]">
