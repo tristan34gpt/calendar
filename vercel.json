@@ -1,8 +1,0 @@
-{
-  "functions": {
-    "action/uptdate-profil.js": {
-      "maxDuration": 30
-    }
-  },
-  "regions": ["cdg1"]
-}
