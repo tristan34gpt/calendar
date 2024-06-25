@@ -5,14 +5,16 @@ import { useUser } from "@/contexts/UserContext";
 import Link from "next/link";
 
 export default function Agenda() {
-  const { reservation } = useUser();
+  const { reservation, user } = useUser();
+
+  console.log(user._id);
 
   return (
     <div className="flex flex-col justify-center items-center w-full">
       {reservation.length > 0 ? (
         <>
           <h1 className="text-[1.5em] font-semibold">Prévisualisation</h1>
-          <Link href={"/apercu"}>
+          <Link href={`/apercu/${user._id}`}>
             <Button className={"w-[400px] h-[40px] mt-5 rounded-md"}>
               Ouvrez l’aperçu
             </Button>
