@@ -10,8 +10,8 @@ import { checkEmail } from "@/utils/check-emailsyntax";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { createUser } from "@/actions/uptdate-profil";
 import { useState } from "react";
+import { createUser } from "@/actions/create-user";
 
 export default function Signin() {
   // Variable
