@@ -74,7 +74,7 @@ export const scheduleCalendar = async (schedule) => {
 
 // View calendar
 
-export const ViewCalendar = async (view) => {
+export const viewCalendar = async (view) => {
   await Verify();
   const session = await getServerSession(authOptions);
   const client = await MongoClient.connect(process.env.MONGODB_CLIENT);

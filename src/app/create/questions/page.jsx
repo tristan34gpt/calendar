@@ -33,7 +33,7 @@ export default function Question() {
   const questionsRef = useRef(null);
   console.log(questions);
 
-  // Function
+  // Fonction pour ajouter une nouvelle question
   const addQuestions = (e) => {
     setModale(false);
     const newQuestion = questionsRef.current.value;
@@ -44,10 +44,12 @@ export default function Question() {
     }
   };
 
+  // Fonction pour supprimer une question
   const removeQuestion = (index) => {
     setQuestions(questions.filter((_, i) => i !== index));
   };
 
+  // Fonction pour enregistrer les questions
   const createQuestions = async (questions) => {
     setLoading(true);
     try {

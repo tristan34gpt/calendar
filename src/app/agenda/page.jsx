@@ -7,8 +7,6 @@ import Link from "next/link";
 export default function Agenda() {
   const { reservation, user } = useUser();
 
-  console.log(user._id);
-
   return (
     <div className="flex flex-col justify-center items-center w-full">
       {reservation.length > 0 ? (

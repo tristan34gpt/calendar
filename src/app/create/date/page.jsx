@@ -41,7 +41,7 @@ export default function Date() {
     }
   }, [status, session]);
 
-  // Functions
+  // Fonction pour ajouter ou supprimer une date
   const toggleDate = (day) => {
     if (dates.includes(day)) {
       setDates(dates.filter((d) => d !== day));
@@ -50,6 +50,7 @@ export default function Date() {
     }
   };
 
+  // Fonction pour créer une date et naviguer vers la page des horaires
   const createDate = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -69,11 +70,11 @@ export default function Date() {
   };
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return <div>Chargement...</div>;
   }
 
   if (!session) {
-    return <div>You must be logged in to view this page.</div>;
+    return <div>Vous devez être connecté pour voir cette page.</div>;
   }
 
   return (

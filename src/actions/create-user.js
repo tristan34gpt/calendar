@@ -1,78 +1,84 @@
 "use server";
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { checkEmail } from "@/utils/check-emailsyntax";
 import { MongoClient } from "mongodb";
-import { getServerSession } from "next-auth";
+import bcrypt from "bcrypt";
+import { checkEmail } from "@/utils/check-emailsyntax";
 
-export const updateUser = async (firstname, lastname, email) => {
-  if (!firstname || !lastname || !email) {
-    console.log("Missing field");
-    throw new Error("No field should be empty!");
+export const createUser = async (firstname, lastname, email, password) => {
+  console.log("createUser called with:", {
+    firstname,
+    lastname,
+    email,
+    password,
+  });
+
+  console.time("createUser");
+
+  // Log: début de la validation des champs
+  console.time("validateFields");
+  if (!firstname || !lastname || !email || !password) {
+    console.error("Validation failed: missing fields");
+    console.timeEnd("validateFields");
+    console.timeEnd("createUser");
+    throw new Error("Aucun champ ne doit être vide !");
   }
 
   if (!checkEmail(email)) {
-    throw new Error("Please enter a valid email");
+    console.error("Validation failed: invalid email");
+    console.timeEnd("validateFields");
+    console.timeEnd("createUser");
+    throw new Error("Veuillez entrer un email valide !");
   }
+  console.timeEnd("validateFields");
 
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    throw new Error("User not authenticated");
-  }
-
-  const client = new MongoClient(process.env.MONGODB_CLIENT);
-  await client.connect();
-  const db = client.db(process.env.MONGODB_DATABASE);
-
+  let client;
   try {
-    const existingUser = await db
-      .collection("users")
-      .findOne({ email: session.user.email });
+    // Log: début de la connexion à MongoDB
+    console.time("connectToDatabase");
+    client = await MongoClient.connect(process.env.MONGODB_CLIENT);
+    const db = client.db(process.env.MONGODB_DATABASE);
+    console.timeEnd("connectToDatabase");
 
-    if (!existingUser) {
-      throw new Error("User not found");
-    }
+    // Log: vérification de l'existence de l'utilisateur
+    console.time("checkUserExistence");
+    console.log("Checking if email is already used...");
+    let user = await db.collection("users").find({ email }).limit(1).toArray();
+    console.timeEnd("checkUserExistence");
 
-    let updateFields = {};
-
-    if (existingUser.firstname !== firstname) {
-      updateFields.firstname = firstname;
-    }
-    if (existingUser.lastname !== lastname) {
-      updateFields.lastname = lastname;
-    }
-    if (existingUser.email !== email) {
-      // Check if the new email is already used by another user
-      const emailUsed = await db.collection("users").findOne({ email: email });
-      if (
-        emailUsed &&
-        emailUsed._id.toString() !== existingUser._id.toString()
-      ) {
-        console.log(`Email already used by another user: ${email}`);
-        throw new Error("This email is already used");
-      }
-      updateFields.email = email;
+    if (user.length !== 0) {
+      console.error("Email already used:", email);
+      console.timeEnd("createUser");
+      throw new Error("Cet email est déjà utilisé");
     }
 
-    if (Object.keys(updateFields).length > 0) {
-      const result = await db
-        .collection("users")
-        .updateOne(
-          { email: session.user.email },
-          { $set: updateFields },
-          { upsert: true }
-        );
-      console.log("Profile updated successfully", result);
-      return result;
-    } else {
-      console.log("No update necessary");
-      return { message: "No update necessary" };
-    }
+    // Log: cryptage du mot de passe
+    console.time("encryptPassword");
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    console.timeEnd("encryptPassword");
+
+    // Log: insertion de l'utilisateur
+    console.time("insertUser");
+    await db.collection("users").insertOne({
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      password: encryptedPassword,
+      creation: new Date(),
+    });
+    console.timeEnd("insertUser");
+
+    console.log("User created successfully:", email);
   } catch (e) {
-    console.error("Error updating profile:", e.message);
-    throw new Error(e.message);
+    console.error("Error during user creation process:", e);
+    throw e;
   } finally {
-    await client.close();
+    if (client) {
+      // Log: fermeture de la connexion MongoDB
+      console.time("closeConnection");
+      await client.close();
+      console.timeEnd("closeConnection");
+    }
   }
+
+  console.timeEnd("createUser");
 };

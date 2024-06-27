@@ -9,11 +9,13 @@ export default function Home() {
   const [detailsReservation, setDetailsReservation] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState(null);
 
+  // Fonction pour ouvrir la modale avec les détails de la réservation
   const handleOpenModal = (reservation) => {
     setSelectedReservation(reservation);
     setDetailsReservation(true);
   };
 
+  // Fonction pour fermer la modale avec les détails de la réservation
   const handleCloseModal = () => {
     setDetailsReservation(false);
     setSelectedReservation(null);
@@ -23,7 +25,7 @@ export default function Home() {
   return (
     <div>
       {reservationUser && reservationUser.length > 0 ? (
-        // Display Home with reservations
+        // Afficher la page d'accueil avec les réservations
         <div className="w-[100%] mt-[40px]">
           <h1 className="text-center text-[1.5em] font-semibold">
             Mon CALENDAR
@@ -44,12 +46,12 @@ export default function Home() {
               </div>
             ))}
             <p className="text-[1.3em] mt-5">
-              Vous avez {reservationUser.length} appels à effectuer aujourd'hui.
+              Vous avez {reservationUser.length} réservation(s).
             </p>
           </div>
         </div>
       ) : (
-        // Display Home without reservations
+        // Afficher la page d'accueil sans réservations
         <div className="w-[100%] mt-[40px]">
           <h1 className="text-center text-[1.5em] font-semibold">
             Mon CALENDAR

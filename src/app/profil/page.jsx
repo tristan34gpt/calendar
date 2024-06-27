@@ -7,7 +7,7 @@ import Button from "@/components/Button";
 import Loading from "@/components/Loading";
 
 export default function Profil() {
-  // Context
+  // Contexte
   const { user, fetchUser, status } = useUser();
 
   // Variables
@@ -17,7 +17,7 @@ export default function Profil() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
 
-  // Cycle
+  // Cycle de vie
   useEffect(() => {
     if (user) {
       setFirstName(user.firstname);
@@ -26,7 +26,7 @@ export default function Profil() {
     }
   }, [user]);
 
-  // Function
+  // Fonction pour mettre à jour le profil
   const updateProfile = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -65,16 +65,16 @@ export default function Profil() {
     }
   };
 
-  // Loading session
+  // Affichage du chargement de la session
   if (status === "loading" || !user) {
     return <Loading />;
   }
 
   return (
     <div className="mt-[100px] flex flex-col justify-center text-center w-full h-full relative">
-      {/* User info */}
+      {/* Informations de l'utilisateur */}
       <h1 className="text-[1.3em] font-semibold">Profil</h1>
-      <div className="text-[1.1em] mt-[30px]">
+      <div className="text-[1.1em] mt-[30px] ">
         <h3>
           <span className="font-semibold">Nom :</span> {user.lastname}
         </h3>
@@ -95,7 +95,7 @@ export default function Profil() {
           Modifier le profil
         </Button>
 
-        {/* Form update profil */}
+        {/* Formulaire de mise à jour du profil */}
         {modalEditProfil && (
           <div className="mt-2 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center bg-gradiant-color w-[600px] h-[500px] text-white text-center rounded-md">
             <button
@@ -107,7 +107,6 @@ export default function Profil() {
             >
               fermer
             </button>
-
             <form onSubmit={updateProfile} className="flex flex-col">
               <h2 className="text-[1.2em] font-semibold mb-[30px]">
                 Modifier votre profil

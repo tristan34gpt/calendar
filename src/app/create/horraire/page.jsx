@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 export default function Horraires() {
   const { session, status, reservation } = useUser();
 
+  // Références pour les champs d'heure
   const startTime = useRef(null);
   const endTime = useRef(null);
   const startPauseTime = useRef(null);
@@ -38,8 +39,7 @@ export default function Horraires() {
     }
   }, [status, session]);
 
-  // Function
-
+  // Fonction pour créer un nouvel horaire
   const createSchedule = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -69,7 +69,7 @@ export default function Horraires() {
 
   return (
     <div className="flex flex-col justify-center items-center w-full">
-      {/* Display saved schedules */}
+      {/* Afficher les horaires enregistrés */}
       {mySchedule.length > 0 && !modify && (
         <div>
           <h2 className="text-[1.2em] text-center font-semibold">

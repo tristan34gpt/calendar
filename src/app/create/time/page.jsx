@@ -32,8 +32,7 @@ export default function Time() {
     }
   }, [status, session]);
 
-  // Function
-
+  // Fonction pour créer ou modifier la durée de l'appel
   const createTime = async (e) => {
     e.preventDefault();
     setLoading(true);

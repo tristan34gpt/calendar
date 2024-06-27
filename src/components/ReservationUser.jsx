@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-export default function ReservationUser({ date, questions }) {
+export default function ReservationUser({ date, questions, onSuccess }) {
   const [confirmation, setConfirmation] = useState(false);
 
   // Function to handle the form submission
@@ -28,6 +28,7 @@ export default function ReservationUser({ date, questions }) {
 
       if (response.ok) {
         toast.success("Réservation réussie !");
+        onSuccess(); // Notify parent component
         setConfirmation(false);
       } else {
         const data = await response.json();

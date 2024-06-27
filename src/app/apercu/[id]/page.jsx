@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 export default function Apercu() {
-  const { id } = useParams(); // Retrieve the ID from the URL
+  const { id } = useParams(); // Récupérer l'ID depuis l'URL
   const {
     user,
     reservation,
@@ -14,10 +14,12 @@ export default function Apercu() {
     fetchUserById,
     fetchReservationById,
     fetchReservationUserById,
-  } = useUser(); // Retrieve user data and reservations
+  } = useUser(); // Récupérer les données de l'utilisateur et les réservations
+
   const [days, setDays] = useState([]);
   const [modal, setModal] = useState(false);
   const [selectedDateTime, setSelectedDateTime] = useState(null);
+  const [reservationSuccess, setReservationSuccess] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -33,24 +35,34 @@ export default function Apercu() {
     }
   }, [reservation]);
 
+  useEffect(() => {
+    if (reservationSuccess) {
+      fetchUserById(id);
+      fetchReservationById(id);
+      fetchReservationUserById(id);
+      setModal(false);
+      setReservationSuccess(false);
+    }
+  }, [reservationSuccess]);
+
   if (reservation.length === 0 || !reservation[0].schedule) {
-    return <div>Loading...</div>; // or another appropriate loading message
+    return <div>Chargement...</div>; // ou un autre message de chargement approprié
   }
 
-  // Function to convert a "HH:MM" string to minutes
+  // Fonction pour convertir une chaîne "HH:MM" en minutes
   const timeToMinutes = (time) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours * 60 + minutes;
   };
 
-  // Function to convert minutes to a "HH:MM" string
+  // Fonction pour convertir des minutes en chaîne "HH:MM"
   const minutesToTime = (minutes) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
   };
 
-  // Function to generate time slots
+  // Fonction pour générer des créneaux horaires
   const generateTimeSlots = (start, end, interval) => {
     const startMinutes = timeToMinutes(start);
     const endMinutes = timeToMinutes(end);
@@ -67,7 +79,7 @@ export default function Apercu() {
     return timeSlots;
   };
 
-  // Function to format days in English
+  // Fonction pour formater les jours en anglais
   const formatDay = (day) => {
     const daysOfWeek = {
       Lundi: "Mon",
@@ -81,16 +93,13 @@ export default function Apercu() {
     return daysOfWeek[day] || day;
   };
 
-  // Function to check if a time slot is taken
+  // Fonction pour vérifier si un créneau horaire est pris
   const isTimeSlotTaken = (day, time) => {
     const formattedDay = formatDay(day);
     return reservationUser.some((reservation) => {
       const [reservationDay, reservationTime] =
         reservation.dateReservation.split(" ");
       const formattedReservationDay = formatDay(reservationDay);
-      console.log(
-        `Comparing: ${formattedDay} with ${formattedReservationDay} and ${time} with ${reservationTime}`
-      ); // Debugging output
       return (
         formattedDay === formattedReservationDay && time === reservationTime
       );
@@ -108,10 +117,16 @@ export default function Apercu() {
 
   return (
     <div className="p-5">
+      <div className="font-bold text-[1.3em] m-5 text-center">
+        Réservez votre créneau
+      </div>
       {days.length > 0
         ? days.map((day, index) => (
-            <div className="border" key={index}>
-              <div>
+            <div
+              className="border bg-gradient-transparent rounded-md m-3 p-2"
+              key={index}
+            >
+              <div className=" text-[1.05em] font-semibold">
                 <p>{day}</p>
                 {generateTimeSlots(
                   reservation[0].schedule.startTime,
@@ -141,6 +156,7 @@ export default function Apercu() {
             <ReservationUser
               date={`${selectedDateTime.day} ${selectedDateTime.time}`}
               questions={reservation[0].questions}
+              onSuccess={() => setReservationSuccess(true)}
             />
             <button
               className="mt-4 p-2 bg-red-500 text-white rounded"
